@@ -1,0 +1,2002 @@
+:global(page),
+page {
+  background: #0b1020;
+  color: #f3efe5;
+}
+
+view,
+text,
+input,
+button,
+scroll-view,
+label,
+checkbox {
+  box-sizing: border-box;
+}
+
+/* 安卓端部分组件会继承系统默认黑色字体，必须显式声明文字颜色 */
+.page-wrap,
+.card,
+.section-card,
+.section-card-inner,
+.info-box,
+.stat-item,
+.technique-item,
+.map-card,
+.recipe-card,
+.sect-card,
+.task-card,
+.exchange-card,
+.equipment-card,
+.explore-modal {
+  color: #f3efe5;
+}
+
+text,
+label {
+  color: inherit;
+}
+
+input {
+  color: #ffffff;
+  caret-color: #f0c66b;
+}
+
+.page-wrap {
+  min-height: 100vh;
+  padding: 24rpx;
+  background: linear-gradient(180deg, #0b1020 0%, #0a0d14 100%);
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  line-height: 1.25;
+  border: none;
+  border-radius: 24rpx;
+  font-size: 27rpx;
+  color: #f6edd9;
+  background: transparent;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button[disabled],
+button[disabled="true"] {
+  opacity: 0.55;
+  color: #c6cfde !important;
+}
+
+button::after {
+  border: none;
+}
+
+.card {
+  background: rgba(12, 18, 30, 0.92);
+  border: 2rpx solid rgba(255, 255, 255, 0.08);
+  border-radius: 28rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.topbar,
+.section-card,
+.section-card-inner,
+.topbar-main,
+.topbar-actions,
+.topbar-buttons,
+.nav-strip,
+.profile-top,
+.stats-grid,
+.action-row,
+.technique-main,
+.map-grid,
+.difficulty-row,
+.tips-row,
+.row,
+.section-head,
+.map-card-head,
+.map-meta,
+.batch-row,
+.recipe-head,
+.recipe-meta,
+.page-grid {
+  display: flex;
+}
+
+.topbar,
+.section-card,
+.section-card-inner,
+.topbar-main,
+.profile-top,
+.stats-grid,
+.map-grid,
+.map-meta,
+.technique-left,
+.technique-side,
+.map-main,
+.page-grid,
+.recipe-meta {
+  flex-direction: column;
+}
+
+.topbar,
+.section-card,
+.section-card-inner,
+.page-grid {
+  gap: 18rpx;
+}
+
+.topbar-actions,
+.topbar-buttons,
+.nav-strip,
+.action-row,
+.difficulty-row,
+.tips-row,
+.batch-row {
+  flex-wrap: wrap;
+}
+
+.nav-scroll,
+.inner-tab-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.nav-strip {
+  gap: 16rpx;
+  align-items: center;
+}
+
+.inner-strip {
+  margin-bottom: 0;
+}
+
+.eyebrow {
+  display: block;
+  color: #d6b46d;
+  font-size: 24rpx;
+  margin-bottom: 10rpx;
+}
+
+.title {
+  display: block;
+  font-size: 56rpx;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff4d6;
+}
+
+.subtitle,
+.small-text,
+.technique-desc,
+.map-desc,
+.result-text,
+.log-text,
+.difficulty-desc,
+.recipe-desc {
+  color: #aeb8cb;
+  font-size: 26rpx;
+  line-height: 1.7;
+}
+
+.resource-chip,
+.status-pill,
+.small-badge {
+  padding: 10rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f0dba6;
+  font-size: 24rpx;
+}
+
+.status-pill.running,
+.small-badge.ready {
+  background: rgba(91, 199, 120, 0.16);
+  color: #8ef3ab;
+}
+
+.status-pill.paused {
+  background: rgba(255, 196, 90, 0.16);
+  color: #ffd27c;
+}
+
+.nav-btn,
+.primary-btn,
+.secondary-btn,
+.ghost-btn,
+.danger-btn,
+.difficulty-btn {
+  min-height: 76rpx;
+  padding: 16rpx 22rpx;
+  border-radius: 22rpx;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.nav-btn,
+.ghost-btn,
+.difficulty-btn {
+  background: rgba(255, 255, 255, 0.06);
+  color: #f6edd9;
+}
+
+.nav-btn.active,
+.primary-btn {
+  background: linear-gradient(135deg, #f0c66b, #d79d3f);
+  color: #1e1609;
+}
+
+.primary-btn[disabled],
+.primary-btn[disabled="true"] {
+  color: #4b3a1a !important;
+  background: linear-gradient(135deg, rgba(240, 198, 107, 0.62), rgba(215, 157, 63, 0.58));
+}
+
+.secondary-btn,
+.difficulty-btn.active {
+  background: rgba(97, 169, 255, 0.16);
+  color: #b6d7ff;
+}
+
+.danger-btn {
+  background: rgba(228, 97, 97, 0.15);
+  color: #ffb4b4;
+}
+
+.disabled {
+  opacity: 0.7;
+  color: #c6cfde;
+}
+
+.mini-btn,
+.small-btn {
+  min-height: 64rpx;
+  padding: 12rpx 18rpx;
+  font-size: 25rpx;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.section-head {
+  justify-content: space-between;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.second-head {
+  margin-top: 16rpx;
+}
+
+.section-title,
+.realm-title,
+.technique-name,
+.map-name,
+.recipe-name {
+  font-weight: 700;
+  color: #fff4d6;
+}
+
+.section-title {
+  font-size: 38rpx;
+}
+
+.section-mini-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-bottom: 12rpx;
+  color: #fff4d6;
+}
+
+.label,
+.stat-label,
+.technique-type {
+  color: #a9b5ca;
+  font-size: 24rpx;
+}
+
+.technique-type {
+  color: #d6b46d;
+  margin-bottom: 10rpx;
+}
+
+.name-input {
+  width: 100%;
+  height: 84rpx;
+  padding: 0 22rpx;
+  border-radius: 20rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.realm-box,
+.info-box,
+.stat-item,
+.technique-item,
+.map-card,
+.log-item,
+.recipe-card,
+.sect-card,
+.task-card,
+.exchange-card,
+.equipment-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 2rpx solid rgba(255, 255, 255, 0.06);
+  border-radius: 22rpx;
+  padding: 20rpx;
+}
+
+.realm-title {
+  display: block;
+  font-size: 42rpx;
+  margin: 8rpx 0;
+}
+
+.row {
+  align-items: center;
+}
+
+.between {
+  justify-content: space-between;
+}
+
+.strong-text,
+.stat-value,
+.batch-display {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.progress {
+  width: 100%;
+  height: 20rpx;
+  border-radius: 999rpx;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 16rpx 0;
+}
+
+.progress-inner {
+  height: 100%;
+  background: linear-gradient(90deg, #61a9ff, #f0c66b);
+}
+
+.stats-grid {
+  gap: 14rpx;
+}
+
+.technique-item.active,
+.map-card.active,
+.recipe-card.active {
+  border-color: rgba(240, 198, 107, 0.45);
+}
+
+.map-card.locked {
+  opacity: 0.7;
+  color: #c6cfde;
+}
+
+.technique-main,
+.map-card-head,
+.recipe-head {
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.technique-side {
+  min-width: 220rpx;
+  color: #dce4f5;
+  font-size: 24rpx;
+}
+
+.map-meta,
+.recipe-meta {
+  gap: 8rpx;
+  color: #d9e3f6;
+  font-size: 24rpx;
+  margin: 12rpx 0 16rpx;
+}
+.world-map {
+  width: 100%;
+  border-radius: 26rpx;
+  padding: 22rpx;
+  border: 2rpx solid rgba(240, 198, 107, 0.16);
+  background: radial-gradient(circle at 18% 72%, rgba(88, 175, 121, 0.22), transparent 30%), radial-gradient(circle at 78% 22%, rgba(97, 169, 255, 0.2), transparent 32%), rgba(255, 255, 255, 0.035);
+}
+
+.world-map-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-bottom: 18rpx;
+}
+
+.world-map-canvas {
+  position: relative;
+  width: 100%;
+  height: 420rpx;
+  overflow: hidden;
+  border-radius: 24rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(28, 45, 69, 0.95), rgba(12, 18, 30, 0.92));
+}
+
+.world-map-route {
+  position: absolute;
+  height: 4rpx;
+  border-radius: 999rpx;
+  background: rgba(240, 198, 107, 0.32);
+  transform-origin: left center;
+}
+
+.route-one {
+  left: 15%;
+  top: 66%;
+  width: 66%;
+  transform: rotate(-22deg);
+}
+
+.route-two {
+  left: 46%;
+  top: 63%;
+  width: 45%;
+  transform: rotate(-48deg);
+}
+
+.map-node {
+  position: absolute;
+  min-width: 132rpx;
+  padding: 8rpx 12rpx;
+  border-radius: 999rpx;
+  transform: translate(-50%, -50%);
+  background: rgba(12, 18, 30, 0.88);
+  border: 2rpx solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.map-node.active {
+  border-color: rgba(240, 198, 107, 0.85);
+  background: rgba(84, 63, 26, 0.92);
+}
+
+.map-node.locked {
+  opacity: 0.62;
+}
+
+.map-node-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: #f0c66b;
+}
+
+.map-node.locked .map-node-dot {
+  background: #778195;
+}
+
+.map-node-name {
+  font-size: 22rpx;
+  color: #f8edd4;
+  white-space: nowrap;
+}
+
+.map-grid {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.map-grid .map-card {
+  width: calc(50% - 8rpx);
+  flex: 0 0 auto;
+  padding: 16rpx;
+}
+
+.map-grid .map-card-head {
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.map-grid .map-name {
+  font-size: 26rpx;
+}
+
+
+.difficulty-row {
+  gap: 12rpx;
+}
+
+.difficulty-btn {
+  flex: 1;
+  min-width: 180rpx;
+  min-height: 96rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6rpx;
+}
+
+.batch-row {
+  justify-content: center;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.batch-display {
+  min-width: 120rpx;
+  text-align: center;
+}
+
+.gold-text {
+  display: block;
+  color: #ffd27c;
+  margin-top: 12rpx;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+  color: #d8dfec;
+  font-size: 26rpx;
+}
+
+.log-scroll {
+  height: 520rpx;
+}
+
+.log-item {
+  margin-bottom: 12rpx;
+}
+
+.log-time {
+  display: block;
+  color: #e0b968;
+  font-size: 24rpx;
+  margin-bottom: 6rpx;
+}
+
+.explore-modal-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 99;
+  padding: 36rpx;
+  background: rgba(3, 7, 18, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.explore-modal {
+  width: 100%;
+  max-height: 88vh;
+  border-color: rgba(240, 198, 107, 0.28);
+  box-shadow: 0 30rpx 90rpx rgba(0, 0, 0, 0.42);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.explore-modal-head {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.explore-modal-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #fff4d6;
+  margin-top: 6rpx;
+  line-height: 1.22;
+}
+
+.explore-stage {
+  padding: 20rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(135deg, rgba(240, 198, 107, 0.14), rgba(97, 169, 255, 0.10));
+  border: 2rpx solid rgba(240, 198, 107, 0.18);
+  margin-bottom: 14rpx;
+  flex-shrink: 0;
+}
+
+.explore-stage-title {
+  display: block;
+  color: #f0c66b;
+  font-size: 24rpx;
+  margin-bottom: 12rpx;
+}
+
+.explore-stage-text {
+  display: block;
+  color: #ffffff;
+  font-size: 29rpx;
+  line-height: 1.55;
+}
+
+.explore-progress-box {
+  margin-bottom: 16rpx;
+}
+
+.explore-modal-scroll {
+  height: 320rpx;
+  min-height: 180rpx;
+  flex: 1;
+}
+
+.explore-modal-step {
+  padding: 16rpx;
+  margin-bottom: 10rpx;
+  border-radius: 20rpx;
+  background: rgba(255, 255, 255, 0.045);
+  border: 2rpx solid rgba(255, 255, 255, 0.06);
+}
+
+.explore-step-index {
+  display: block;
+  color: #e0b968;
+  font-size: 24rpx;
+  margin-bottom: 8rpx;
+}
+
+.explore-step-text {
+  display: block;
+  color: #dce4f5;
+  font-size: 27rpx;
+  line-height: 1.55;
+}
+
+.modal-actions {
+  margin-top: 14rpx;
+  flex-shrink: 0;
+}
+
+.mt-12 {
+  margin-top: 12rpx;
+}
+
+.name-input::placeholder,
+input::placeholder {
+  color: #8996ad;
+}
+
+/* 微信小程序 / App 端输入框 placeholder 兜底 */
+.input-placeholder {
+  color: #8996ad;
+}
+
+.skill-card {
+  padding: 20rpx;
+  margin-top: 14rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.045);
+  border: 2rpx solid rgba(240, 198, 107, 0.12);
+}
+
+.skill-list {
+  margin-top: 14rpx;
+}
+
+.battle-stage {
+  background: linear-gradient(135deg, rgba(180, 59, 59, 0.18), rgba(240, 198, 107, 0.11));
+  border-color: rgba(255, 122, 122, 0.18);
+}
+
+.inner-nav-scroll {
+  width: 100%;
+  margin: 18rpx 0 20rpx;
+  white-space: nowrap;
+}
+
+.inner-nav {
+  display: inline-flex;
+  gap: 14rpx;
+  padding: 14rpx;
+  min-width: max-content;
+}
+
+.inner-nav-btn {
+  min-width: 150rpx;
+  padding: 14rpx 22rpx;
+  border-radius: 999rpx;
+  border: 2rpx solid rgba(240, 198, 107, 0.18);
+  background: rgba(255, 255, 255, 0.055);
+  color: #dce4f5;
+  font-size: 25rpx;
+  line-height: 1.2;
+}
+
+.inner-nav-btn.active {
+  background: linear-gradient(135deg, rgba(240, 198, 107, 0.95), rgba(201, 138, 54, 0.95));
+  color: #1b2436;
+  border-color: rgba(255, 231, 173, 0.8);
+  font-weight: 700;
+}
+
+.single-view-grid {
+  grid-template-columns: 1fr;
+}
+
+.pill-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+
+.pill-card {
+  padding: 20rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.045);
+  border: 2rpx solid rgba(240, 198, 107, 0.12);
+}
+
+.compact-box {
+  margin: 12rpx 0;
+  padding: 14rpx 16rpx;
+}
+
+/* 预留手机状态栏 / 刘海区域，避免顶部内容贴到通知栏 */
+.page-wrap {
+  padding-top: calc(24rpx + var(--status-bar-height));
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+.topbar {
+  position: relative;
+}
+
+.action-row {
+  gap: 14rpx;
+  align-items: center;
+}
+
+.action-row > button {
+  flex: 1;
+  min-width: 190rpx;
+}
+
+.topbar-buttons > button,
+.nav-strip > button,
+.inner-nav > button,
+.modal-actions > button {
+  flex: 0 0 auto;
+}
+
+.small-badge.running {
+  background: rgba(255, 196, 90, 0.16);
+  color: #ffd27c;
+}
+
+.explore-modal-mask {
+  padding-top: calc(36rpx + var(--status-bar-height));
+  padding-bottom: calc(36rpx + env(safe-area-inset-bottom));
+  align-items: flex-start;
+}
+
+.explore-modal {
+  max-height: calc(100vh - 96rpx - var(--status-bar-height));
+  overflow: hidden;
+}
+
+.explore-modal-head {
+  display: flex;
+}
+
+.battle-status-grid,
+.battle-versus {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.battle-versus {
+  margin-bottom: 18rpx;
+}
+
+.versus-card,
+.battle-side-card {
+  padding: 20rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.045);
+  border: 2rpx solid rgba(255, 255, 255, 0.07);
+}
+
+.versus-card.self {
+  border-color: rgba(97, 169, 255, 0.24);
+}
+
+.versus-card.enemy {
+  border-color: rgba(255, 122, 122, 0.22);
+}
+
+.versus-title {
+  display: block;
+  color: #d6b46d;
+  font-size: 24rpx;
+  margin-bottom: 8rpx;
+}
+
+.versus-name {
+  display: block;
+  color: #ffffff;
+  font-size: 34rpx;
+  font-weight: 800;
+  margin-bottom: 12rpx;
+}
+
+.versus-mark {
+  align-self: center;
+  padding: 8rpx 22rpx;
+  border-radius: 999rpx;
+  color: #1b2436;
+  font-weight: 900;
+  background: linear-gradient(135deg, #f0c66b, #d79d3f);
+}
+
+.mini-progress {
+  width: 100%;
+  height: 14rpx;
+  margin-top: 10rpx;
+  border-radius: 999rpx;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mini-progress-inner {
+  height: 100%;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #61a9ff, #f0c66b);
+}
+
+.mini-progress-inner.hp {
+  background: linear-gradient(90deg, #ff7a7a, #f0c66b);
+}
+
+.mini-progress-inner.spirit {
+  background: linear-gradient(90deg, #61a9ff, #8ef3ab);
+}
+
+.mini-progress-inner.enemy {
+  background: linear-gradient(90deg, #ff5c7a, #ffb36b);
+}
+
+.compact-skill-list,
+.manual-skill-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+}
+
+.compact-skill-card,
+.manual-skill-card {
+  margin-top: 0;
+}
+
+.disabled-skill {
+  opacity: 0.64;
+}
+
+.battle-log-scroll {
+  height: 360rpx;
+}
+
+@media screen and (min-width: 700px) {
+  .battle-status-grid,
+  .battle-versus {
+    flex-direction: row;
+  }
+
+  .versus-card,
+  .battle-side-card {
+    flex: 1;
+  }
+}
+
+
+/* 小屏适配：弹窗内容可读、底部操作不被挤出屏幕 */
+.explore-modal-head,
+.battle-status-grid,
+.explore-progress-box {
+  flex-shrink: 0;
+}
+
+.explore-progress-box {
+  margin-bottom: 12rpx;
+}
+
+.battle-status-grid {
+  max-height: 260rpx;
+  overflow: hidden;
+}
+
+.battle-side-card,
+.versus-card {
+  padding: 16rpx;
+}
+
+.battle-log-scroll {
+  height: 250rpx;
+  min-height: 160rpx;
+  flex: 1;
+}
+
+.manual-skill-list {
+  height: 300rpx;
+  min-height: 220rpx;
+  flex-shrink: 0;
+  margin-top: 10rpx;
+}
+
+.manual-skill-card {
+  padding: 16rpx;
+}
+
+.manual-skill-card .action-row > button {
+  min-width: 120rpx;
+}
+
+/* 所有常见按钮强制单行，避免“挑战\n修炼者”这类断行 */
+.nav-btn,
+.inner-nav-btn,
+.primary-btn,
+.secondary-btn,
+.ghost-btn,
+.danger-btn,
+.difficulty-btn,
+.mini-btn,
+.small-btn {
+  white-space: nowrap;
+  word-break: keep-all;
+  text-align: center;
+}
+
+.action-row > button {
+  min-width: 150rpx;
+}
+
+.modal-actions {
+  padding-top: 10rpx;
+  border-top: 2rpx solid rgba(255, 255, 255, 0.06);
+}
+
+.modal-actions > button {
+  min-width: 180rpx;
+}
+
+.recipe-head > view:first-child,
+.section-head > view:first-child,
+.explore-modal-head > view:first-child {
+  min-width: 0;
+  flex: 1;
+}
+
+.small-badge {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media screen and (max-width: 380px) {
+  .page-wrap {
+    padding-left: 18rpx;
+    padding-right: 18rpx;
+  }
+
+  .card {
+    padding: 18rpx;
+    border-radius: 24rpx;
+  }
+
+  .title {
+    font-size: 48rpx;
+  }
+
+  .section-title {
+    font-size: 34rpx;
+  }
+
+  .nav-btn,
+  .primary-btn,
+  .secondary-btn,
+  .ghost-btn,
+  .danger-btn,
+  .difficulty-btn {
+    min-height: 68rpx;
+    padding: 12rpx 18rpx;
+    font-size: 25rpx;
+  }
+
+  .mini-btn,
+  .small-btn,
+  .inner-nav-btn {
+    min-height: 58rpx;
+    padding: 10rpx 16rpx;
+    font-size: 23rpx;
+  }
+
+  .explore-modal-mask {
+    padding-left: 18rpx;
+    padding-right: 18rpx;
+  }
+
+  .explore-modal-title {
+    font-size: 32rpx;
+  }
+
+  .explore-stage-text {
+    font-size: 27rpx;
+  }
+
+  .battle-status-grid {
+    max-height: 230rpx;
+  }
+
+  .manual-skill-list {
+    height: 260rpx;
+  }
+
+  .battle-log-scroll {
+    height: 220rpx;
+  }
+}
+
+/* ===== 2026-05-15 弹窗居中与小屏抗挤压修正 ===== */
+.explore-modal-mask {
+  padding-left: 28rpx;
+  padding-right: 28rpx;
+  padding-top: calc(28rpx + var(--status-bar-height));
+  padding-bottom: calc(28rpx + env(safe-area-inset-bottom));
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.explore-modal {
+  width: 100%;
+  max-width: 720rpx;
+  height: calc(100vh - 56rpx - var(--status-bar-height) - env(safe-area-inset-bottom));
+  max-height: 1120rpx;
+  margin: 0 auto;
+  padding: 22rpx;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.explore-modal-head,
+.explore-stage,
+.explore-progress-box,
+.modal-actions {
+  flex: 0 0 auto;
+}
+
+.explore-modal-head {
+  align-items: center;
+  margin-bottom: 14rpx;
+}
+
+.explore-modal-title {
+  font-size: 32rpx;
+  line-height: 1.28;
+  max-height: 82rpx;
+  overflow: hidden;
+}
+
+.explore-stage {
+  padding: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.explore-stage-text {
+  font-size: 27rpx;
+  line-height: 1.45;
+  max-height: 124rpx;
+  overflow: hidden;
+}
+
+.explore-modal-scroll,
+.battle-log-scroll,
+.manual-skill-list {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.explore-modal-scroll {
+  flex: 1 1 0;
+  height: auto !important;
+}
+
+.battle-log-scroll {
+  flex: 1 1 0;
+  height: auto !important;
+  min-height: 150rpx;
+}
+
+.manual-skill-list {
+  flex: 1 1 0;
+  height: auto !important;
+  min-height: 190rpx;
+  max-height: 380rpx;
+}
+
+.battle-status-grid {
+  flex: 0 0 auto;
+  max-height: none;
+  overflow: visible;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.battle-side-card,
+.versus-card {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 14rpx;
+}
+
+.versus-card text,
+.battle-side-card text,
+.stat-item text,
+.recipe-head text {
+  min-width: 0;
+}
+
+.modal-actions {
+  position: relative;
+  z-index: 2;
+  padding-top: 12rpx;
+  margin-top: 12rpx;
+  gap: 14rpx;
+  background: rgba(12, 18, 30, 0.98);
+}
+
+.modal-actions > button {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+button,
+.nav-btn,
+.inner-nav-btn,
+.primary-btn,
+.secondary-btn,
+.ghost-btn,
+.danger-btn,
+.difficulty-btn,
+.mini-btn,
+.small-btn {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.primary-btn,
+.secondary-btn,
+.ghost-btn,
+.danger-btn,
+.difficulty-btn {
+  min-height: 70rpx;
+  padding-left: 18rpx;
+  padding-right: 18rpx;
+  font-size: 26rpx;
+}
+
+.small-btn,
+.mini-btn,
+.inner-nav-btn {
+  min-height: 58rpx;
+  padding-left: 16rpx;
+  padding-right: 16rpx;
+  font-size: 24rpx;
+}
+
+.action-row {
+  gap: 12rpx;
+}
+
+.action-row > button {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media screen and (max-width: 380px) {
+  .explore-modal-mask {
+    padding-left: 18rpx;
+    padding-right: 18rpx;
+    padding-top: calc(18rpx + var(--status-bar-height));
+    padding-bottom: calc(18rpx + env(safe-area-inset-bottom));
+  }
+
+  .explore-modal {
+    height: calc(100vh - 36rpx - var(--status-bar-height) - env(safe-area-inset-bottom));
+    padding: 18rpx;
+    border-radius: 24rpx;
+  }
+
+  .explore-modal-head {
+    gap: 12rpx;
+  }
+
+  .explore-modal-title {
+    font-size: 30rpx;
+    max-height: 76rpx;
+  }
+
+  .explore-stage {
+    padding: 14rpx;
+  }
+
+  .explore-stage-text {
+    font-size: 26rpx;
+    max-height: 108rpx;
+  }
+
+  .battle-status-grid {
+    gap: 10rpx;
+  }
+
+  .battle-side-card,
+  .versus-card {
+    padding: 12rpx;
+  }
+
+  .manual-skill-list {
+    min-height: 160rpx;
+    max-height: 320rpx;
+  }
+
+  .battle-log-scroll {
+    min-height: 120rpx;
+  }
+
+  .primary-btn,
+  .secondary-btn,
+  .ghost-btn,
+  .danger-btn,
+  .difficulty-btn {
+    min-height: 62rpx;
+    padding-left: 14rpx;
+    padding-right: 14rpx;
+    font-size: 24rpx;
+  }
+
+  .small-btn,
+  .mini-btn,
+  .inner-nav-btn {
+    min-height: 54rpx;
+    padding-left: 12rpx;
+    padding-right: 12rpx;
+    font-size: 22rpx;
+  }
+}
+
+/* ===== 手动战斗技能区放大：小屏至少显示 3 个技能 ===== */
+.manual-battle-modal .manual-skill-list {
+  flex: 0 0 520rpx;
+  height: 520rpx !important;
+  min-height: 520rpx;
+  max-height: 520rpx;
+  margin-top: 12rpx;
+  padding-right: 6rpx;
+}
+
+.manual-battle-modal .battle-log-scroll {
+  flex: 0 0 150rpx;
+  height: 150rpx !important;
+  min-height: 150rpx;
+}
+
+.manual-battle-modal .explore-stage-text {
+  max-height: 76rpx;
+}
+
+.manual-skill-card {
+  padding: 14rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.manual-skill-main {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  min-width: 0;
+}
+
+.manual-skill-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.manual-skill-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  min-width: 0;
+}
+
+.manual-skill-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.manual-skill-cost {
+  flex: 0 0 auto;
+  padding: 6rpx 12rpx;
+  font-size: 21rpx;
+}
+
+.manual-skill-desc,
+.manual-skill-meta {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.manual-skill-desc {
+  margin-top: 4rpx;
+  font-size: 23rpx;
+  line-height: 1.28;
+}
+
+.manual-skill-meta {
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  line-height: 1.25;
+}
+
+.manual-skill-btn {
+  flex: 0 0 112rpx;
+  width: 112rpx;
+  min-width: 112rpx;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+@media screen and (max-width: 380px) {
+  .manual-battle-modal .manual-skill-list {
+    flex-basis: 460rpx;
+    height: 460rpx !important;
+    min-height: 460rpx;
+    max-height: 460rpx;
+  }
+
+  .manual-battle-modal .battle-log-scroll {
+    flex-basis: 120rpx;
+    height: 120rpx !important;
+    min-height: 120rpx;
+  }
+
+  .manual-skill-card {
+    padding: 12rpx 14rpx;
+  }
+
+  .manual-skill-main {
+    gap: 10rpx;
+  }
+
+  .manual-skill-btn {
+    flex-basis: 96rpx;
+    width: 96rpx;
+    min-width: 96rpx;
+  }
+
+  .manual-skill-cost {
+    font-size: 20rpx;
+    padding: 5rpx 10rpx;
+  }
+}
+
+.shop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.shop-card {
+  /* 与宗门兑换、装备卡片保持统一深色卡片风格 */
+  background: rgba(255, 255, 255, 0.04);
+  border: 2rpx solid rgba(255, 255, 255, 0.06);
+  box-shadow: none;
+}
+
+.shop-card.locked {
+  opacity: 0.72;
+  filter: grayscale(0.18);
+}
+
+.shop-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx 24rpx;
+}
+
+.compact-head {
+  margin-bottom: 12rpx;
+}
+
+.check-group {
+  display: block;
+  width: 100%;
+}
+
+/* ===== 百科页、装备筛选与页面渐入优化 ===== */
+
+.equipment-filter-scroll {
+  width: 100%;
+  white-space: nowrap;
+  margin: 8rpx 0 14rpx;
+}
+
+.equipment-filter-row {
+  display: inline-flex;
+  gap: 14rpx;
+  padding: 14rpx;
+  min-width: max-content;
+  margin-bottom: 0;
+}
+
+.equipment-equipped-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14rpx;
+  margin-bottom: 14rpx;
+}
+
+.owned-equipment-card.active {
+  border-color: rgba(240, 198, 107, 0.48);
+  background: rgba(240, 198, 107, 0.075);
+}
+
+.empty-card,
+.wiki-card {
+  padding: 20rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.045);
+  border: 2rpx solid rgba(255, 255, 255, 0.06);
+}
+
+.wiki-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.wiki-card .recipe-meta {
+  margin-bottom: 0;
+}
+
+@media screen and (max-width: 380px) {
+  .equipment-equipped-box {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== 2026-05-16 探索弹窗视口固定修正：避免长页面下需要向下滑才能看到完整弹窗 ===== */
+.fixed-viewport-modal-mask,
+.explore-modal-mask {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding-left: 24rpx !important;
+  padding-right: 24rpx !important;
+  padding-top: calc(24rpx + var(--status-bar-height)) !important;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom)) !important;
+}
+
+.explore-modal {
+  width: 100% !important;
+  max-width: 704rpx !important;
+  height: auto !important;
+  max-height: calc(100vh - 48rpx - var(--status-bar-height) - env(safe-area-inset-bottom)) !important;
+  min-height: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.explore-modal--exploration {
+  padding: 20rpx !important;
+}
+
+.explore-modal--exploration .explore-modal-head {
+  flex: 0 0 auto !important;
+  margin-bottom: 10rpx !important;
+  gap: 12rpx !important;
+}
+
+.explore-modal--exploration .explore-modal-title {
+  font-size: 30rpx !important;
+  line-height: 1.25 !important;
+  max-height: 74rpx !important;
+  overflow: hidden !important;
+}
+
+.explore-modal--exploration .explore-stage {
+  flex: 0 0 auto !important;
+  padding: 14rpx !important;
+  margin-bottom: 10rpx !important;
+}
+
+.explore-modal--exploration .explore-stage-title {
+  font-size: 23rpx !important;
+  margin-bottom: 6rpx !important;
+}
+
+.explore-modal--exploration .explore-stage-text {
+  font-size: 26rpx !important;
+  line-height: 1.42 !important;
+  max-height: 104rpx !important;
+  overflow: hidden !important;
+}
+
+.explore-modal--exploration .explore-progress-box {
+  flex: 0 0 auto !important;
+  padding: 10rpx 0 8rpx !important;
+  margin: 0 !important;
+}
+
+.explore-modal--exploration .explore-modal-scroll {
+  flex: 1 1 auto !important;
+  height: 360rpx !important;
+  min-height: 220rpx !important;
+  max-height: 420rpx !important;
+  overflow: hidden !important;
+}
+
+.explore-modal--exploration .explore-modal-step {
+  padding: 12rpx !important;
+  margin-bottom: 10rpx !important;
+}
+
+.explore-modal--exploration .explore-step-index {
+  font-size: 21rpx !important;
+  margin-bottom: 4rpx !important;
+}
+
+.explore-modal--exploration .explore-step-text {
+  font-size: 24rpx !important;
+  line-height: 1.42 !important;
+}
+
+.explore-modal--exploration .modal-actions {
+  flex: 0 0 auto !important;
+  margin-top: 10rpx !important;
+  padding-top: 10rpx !important;
+  padding-bottom: 0 !important;
+}
+
+@media screen and (max-width: 380px) {
+  .fixed-viewport-modal-mask,
+  .explore-modal-mask {
+    padding-left: 16rpx !important;
+    padding-right: 16rpx !important;
+    padding-top: calc(16rpx + var(--status-bar-height)) !important;
+    padding-bottom: calc(16rpx + env(safe-area-inset-bottom)) !important;
+  }
+
+  .explore-modal--exploration {
+    padding: 16rpx !important;
+  }
+
+  .explore-modal--exploration .explore-stage-text {
+    max-height: 88rpx !important;
+  }
+
+  .explore-modal--exploration .explore-modal-scroll {
+    height: 300rpx !important;
+    min-height: 180rpx !important;
+    max-height: 340rpx !important;
+  }
+
+  .explore-modal--exploration .modal-actions > button {
+    min-height: 58rpx !important;
+    font-size: 23rpx !important;
+  }
+}
+
+/* ===== 2026-05-16 宗门挑战 / 镇妖塔战斗弹窗修正：视口居中 + 自动战斗过程数值显示 ===== */
+.battle-modal-mask {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding-left: 22rpx !important;
+  padding-right: 22rpx !important;
+  padding-top: calc(22rpx + var(--status-bar-height)) !important;
+  padding-bottom: calc(22rpx + env(safe-area-inset-bottom)) !important;
+}
+
+.battle-modal {
+  width: 100% !important;
+  max-width: 704rpx !important;
+  max-height: calc(100vh - 44rpx - var(--status-bar-height) - env(safe-area-inset-bottom)) !important;
+  min-height: 0 !important;
+  padding: 20rpx !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.battle-modal .explore-modal-head,
+.battle-modal .battle-status-grid,
+.battle-modal .explore-stage,
+.battle-modal .explore-progress-box,
+.battle-modal .modal-actions {
+  flex: 0 0 auto !important;
+}
+
+.battle-modal .explore-modal-head {
+  margin-bottom: 10rpx !important;
+  gap: 12rpx !important;
+}
+
+.battle-modal .explore-modal-title {
+  font-size: 30rpx !important;
+  line-height: 1.25 !important;
+  max-height: 78rpx !important;
+  overflow: hidden !important;
+}
+
+.battle-modal .battle-status-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12rpx !important;
+  margin-bottom: 10rpx !important;
+}
+
+.battle-modal .battle-side-card {
+  padding: 14rpx !important;
+  border-radius: 20rpx !important;
+  min-width: 0 !important;
+}
+
+.battle-modal .battle-side-card .stat-label {
+  font-size: 21rpx !important;
+  line-height: 1.2 !important;
+}
+
+.battle-modal .battle-side-card .stat-value {
+  font-size: 24rpx !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.battle-modal .mini-progress {
+  height: 10rpx !important;
+  margin-top: 8rpx !important;
+}
+
+.battle-modal .explore-stage {
+  padding: 14rpx !important;
+  margin-bottom: 10rpx !important;
+}
+
+.battle-modal .explore-stage-title {
+  font-size: 23rpx !important;
+  margin-bottom: 6rpx !important;
+}
+
+.battle-modal .explore-stage-text {
+  font-size: 25rpx !important;
+  line-height: 1.4 !important;
+  max-height: 92rpx !important;
+  overflow: hidden !important;
+}
+
+.battle-modal .explore-progress-box {
+  padding: 8rpx 0 8rpx !important;
+  margin: 0 !important;
+}
+
+.battle-modal .battle-log-scroll {
+  flex: 1 1 auto !important;
+  height: 300rpx !important;
+  min-height: 190rpx !important;
+  max-height: 360rpx !important;
+  overflow: hidden !important;
+}
+
+.battle-modal .explore-modal-step {
+  padding: 12rpx !important;
+  margin-bottom: 10rpx !important;
+}
+
+.battle-modal .explore-step-index {
+  font-size: 21rpx !important;
+  margin-bottom: 4rpx !important;
+}
+
+.battle-modal .explore-step-text {
+  font-size: 24rpx !important;
+  line-height: 1.42 !important;
+}
+
+.battle-modal .modal-actions {
+  margin-top: 10rpx !important;
+  padding-top: 10rpx !important;
+  padding-bottom: 0 !important;
+}
+
+.manual-battle-modal .manual-skill-list {
+  flex: 0 0 auto !important;
+  height: 360rpx !important;
+  min-height: 320rpx !important;
+  max-height: 400rpx !important;
+  margin-bottom: 10rpx !important;
+}
+
+.manual-battle-modal .battle-log-scroll {
+  height: 160rpx !important;
+  min-height: 120rpx !important;
+  max-height: 190rpx !important;
+}
+
+@media screen and (max-width: 380px) {
+  .battle-modal-mask {
+    padding-left: 14rpx !important;
+    padding-right: 14rpx !important;
+    padding-top: calc(14rpx + var(--status-bar-height)) !important;
+    padding-bottom: calc(14rpx + env(safe-area-inset-bottom)) !important;
+  }
+
+  .battle-modal {
+    padding: 16rpx !important;
+  }
+
+  .battle-modal .battle-status-grid {
+    gap: 10rpx !important;
+  }
+
+  .battle-modal .battle-side-card {
+    padding: 12rpx !important;
+  }
+
+  .battle-modal .battle-log-scroll {
+    height: 250rpx !important;
+    min-height: 160rpx !important;
+    max-height: 300rpx !important;
+  }
+
+  .manual-battle-modal .manual-skill-list {
+    height: 330rpx !important;
+    min-height: 300rpx !important;
+    max-height: 360rpx !important;
+  }
+
+  .manual-battle-modal .battle-log-scroll {
+    height: 132rpx !important;
+    min-height: 104rpx !important;
+  }
+}
+
+/* 独立战斗页面：替代弹窗，避免手机小屏被页面高度挤压 */
+.battle-page-wrap {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-top: calc(var(--status-bar-height) + 18rpx);
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.battle-page-topbar {
+  flex-shrink: 0;
+}
+
+.battle-page-card {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  padding-bottom: calc(18rpx + env(safe-area-inset-bottom));
+}
+
+.battle-page-head {
+  flex-shrink: 0;
+}
+
+.battle-vs-board {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  gap: 12rpx;
+}
+
+.battle-panel {
+  min-width: 0;
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  border-radius: 18rpx;
+  padding: 16rpx;
+  background: rgba(255, 255, 255, 0.045);
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.battle-panel.self {
+  box-shadow: inset 0 0 0 1rpx rgba(110, 231, 183, 0.12);
+}
+
+.battle-panel.enemy {
+  box-shadow: inset 0 0 0 1rpx rgba(248, 113, 113, 0.12);
+}
+
+.battle-panel-title {
+  font-size: 22rpx;
+  color: rgba(226, 232, 240, 0.72);
+  white-space: nowrap;
+}
+
+.battle-big-value {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #f8fafc;
+  white-space: nowrap;
+}
+
+.battle-vs-word {
+  align-self: center;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  font-weight: 900;
+  color: #fde68a;
+  background: rgba(250, 204, 21, 0.12);
+  border: 1rpx solid rgba(250, 204, 21, 0.24);
+}
+
+.battle-row-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12rpx;
+  color: rgba(226, 232, 240, 0.78);
+  font-size: 22rpx;
+  line-height: 1.35;
+}
+
+.battle-row-line text {
+  white-space: nowrap;
+}
+
+.battle-page-stage {
+  flex-shrink: 0;
+  max-height: 150rpx;
+  overflow: hidden;
+}
+
+.battle-page-skill-scroll {
+  flex-shrink: 0;
+  height: 360rpx;
+  min-height: 300rpx;
+  border-radius: 18rpx;
+  overflow: hidden;
+}
+
+.battle-page-log-scroll {
+  flex: 1;
+  min-height: 180rpx;
+  border-radius: 18rpx;
+  overflow: hidden;
+}
+
+.battle-page-actions {
+  flex-shrink: 0;
+  padding-top: 4rpx;
+}
+
+@media screen and (max-height: 700px) {
+  .battle-page-wrap {
+    gap: 12rpx;
+  }
+
+  .battle-page-card {
+    gap: 10rpx;
+  }
+
+  .battle-page-skill-scroll {
+    height: 320rpx;
+    min-height: 280rpx;
+  }
+
+  .battle-page-log-scroll {
+    min-height: 140rpx;
+  }
+
+  .battle-panel {
+    padding: 12rpx;
+    gap: 6rpx;
+  }
+
+  .battle-big-value {
+    font-size: 26rpx;
+  }
+}
+
+.shop-buy-row {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  flex-wrap: nowrap;
+}
+
+.shop-amount-box {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+  padding: 10rpx 14rpx;
+  border-radius: 16rpx;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+}
+
+.shop-amount-input {
+  width: 120rpx;
+  height: 48rpx;
+  line-height: 48rpx;
+  text-align: center;
+  border-radius: 12rpx;
+  color: #ffe9bd;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1rpx solid rgba(255, 214, 138, 0.25);
+  font-size: 24rpx;
+}
+
+.warning-box {
+  border-color: rgba(239, 68, 68, 0.35);
+  background: rgba(127, 29, 29, 0.22);
+}

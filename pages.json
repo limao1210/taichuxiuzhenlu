@@ -1,0 +1,80 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "修仙",
+        "backgroundColor": "#0b1020"
+      }
+    },
+    {
+      "path": "pages/explore/explore",
+      "style": {
+        "navigationBarTitleText": "探索",
+        "backgroundColor": "#0b1020"
+      }
+    },
+    {
+      "path": "pages/alchemy/alchemy",
+      "style": {
+        "navigationBarTitleText": "炼丹",
+        "backgroundColor": "#0b1020"
+      }
+    },
+    {
+      "path": "pages/sect/sect",
+      "style": {
+        "navigationBarTitleText": "宗门",
+        "backgroundColor": "#0b1020"
+      }
+    },
+    {
+      "path": "pages/inventory/inventory",
+      "style": {
+        "navigationBarTitleText": "宝物",
+        "backgroundColor": "#0b1020"
+      }
+    },
+    {
+      "path": "pages/wiki/wiki",
+      "style": {
+        "navigationBarTitleText": "百科",
+        "backgroundColor": "#0b1020"
+      }
+    },
+    {
+      "path": "pages/saves/saves",
+      "style": {
+        "navigationBarTitleText": "存档管理",
+        "backgroundColor": "#0b1020"
+      }
+    },
+    {
+      "path": "pages/battle/battle",
+      "style": {
+        "navigationBarTitleText": "战斗",
+        "backgroundColor": "#0b1020"
+      }
+    }
+  ],
+  "tabBar": {
+    "color": "#8899aa",
+    "selectedColor": "#f0c66b",
+    "backgroundColor": "#0d1325",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "修仙" },
+      { "pagePath": "pages/explore/explore", "text": "探索" },
+      { "pagePath": "pages/alchemy/alchemy", "text": "炼丹" },
+      { "pagePath": "pages/sect/sect", "text": "宗门" },
+      { "pagePath": "pages/inventory/inventory", "text": "宝物" }
+    ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom",
+    "navigationBarBackgroundColor": "#0b1020",
+    "backgroundColor": "#0b1020"
+  },
+  "uniIdRouter": {}
+}

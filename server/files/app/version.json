@@ -1,0 +1,7 @@
+{
+  "versionCode": 2026060202,
+  "versionName": "2.3.2",
+  "downloadUrl": "http://你的IP:8080/app/xiuxian-release.apk",
+  "updateLog": "1.修复战斗闪避率过高\n2.丹药公式重做\n3.无限爬塔\n4.存档槽系统",
+  "forceUpdate": false
+}
