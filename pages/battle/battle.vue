@@ -96,10 +96,13 @@
         <button class="secondary-btn" :disabled="!battle.isBattling" @click="skipBattleProcess">
           {{ battle.controlMode === 'manual' ? '自动托管' : '跳过过程' }}
         </button>
-        <button class="primary-btn" :disabled="battle.isBattling" @click="continueBattleChallenge">
+        <button v-if="battle.source === 'exploration'" class="primary-btn" :disabled="battle.isBattling" @click="returnFromBattlePage">
+          返回探索
+        </button>
+        <button v-else class="primary-btn" :disabled="battle.isBattling" @click="continueBattleChallenge">
           {{ battle.source === 'tower' ? '继续挑战镇妖塔' : '继续宗门试炼' }}
         </button>
-        <button class="secondary-btn" :disabled="battle.isBattling" @click="returnFromBattlePage">返回宗门</button>
+        <button v-if="battle.source !== 'exploration'" class="secondary-btn" :disabled="battle.isBattling" @click="returnFromBattlePage">返回宗门</button>
       </view>
     </view>
   </view>

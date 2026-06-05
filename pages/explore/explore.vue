@@ -402,6 +402,7 @@ const {
   finishExplorationPlayback,
   skipExplorationProcess,
   closeExploreModal,
+  continueExplorationAfterBattle,
   startExploration,
   clampPlayerHp,
   recoverBattleState,
@@ -457,27 +458,7 @@ function switchExploreView(view) {
 }
 
 onMounted(() => {
-  try {
-    const raw = uni.getStorageSync('__xiuxian_pending_explore__')
-    if (raw) {
-      uni.removeStorageSync('__xiuxian_pending_explore__')
-      const pending = JSON.parse(raw)
-      if (pending.steps && pending.rewards) {
-        const afterCombat = Math.random() > 0.5
-        if (afterCombat) {
-          const cultivationGain = Math.floor(800 * (1 + player.realmIndex * 0.6) * (pending.difficultyId === 'hard' ? 1.45 : pending.difficultyId === 'abyss' ? 2.1 : 1))
-          player.cultivation += cultivationGain
-          pending.steps.push('战斗结束，你搜刮敌人遗物，继续深入探索。')
-          pending.rewards.push('修为+' + cultivationGain + '，战利品若干')
-        } else {
-          pending.steps.push('力战之后负伤不轻，你决定暂避锋芒，收拾行装返回。')
-        }
-        exploration.currentProcess = pending.steps
-        exploration.lastResult = buildExploreSummary(pending.steps, pending.rewards)
-        exploreModalVisible.value = true
-      }
-    }
-  } catch {}
+  continueExplorationAfterBattle()
 })
 </script>
 
