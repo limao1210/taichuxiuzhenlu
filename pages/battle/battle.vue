@@ -138,11 +138,24 @@ const {
 
 const battleStarted = ref(false)
 
+function goBackIfNoBattle() {
+  const url = battle.returnUrl || '/pages/explore/explore'
+  const tabPages = ['/pages/index/index', '/pages/explore/explore', '/pages/alchemy/alchemy', '/pages/sect/sect', '/pages/inventory/inventory']
+  if (tabPages.includes(url)) {
+    uni.switchTab({ url })
+  } else {
+    uni.redirectTo({ url, animationType: 'fade-in', animationDuration: 180 })
+  }
+}
+
 onShow(() => {
   if (battleStarted.value || battle.visible || battle.isBattling) return
   battleStarted.value = true
   const ok = startBattleFromRequest()
-  if (!ok) showFeedback('没有待进行的战斗')
+  if (!ok) {
+    showFeedback('没有待进行的战斗')
+    setTimeout(goBackIfNoBattle, 800)
+  }
 })
 
 function getBattlePercent(current, max) {

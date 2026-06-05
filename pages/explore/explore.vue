@@ -208,13 +208,13 @@
 
       <view class="explore-stage">
         <text class="explore-stage-title">{{ isExploring ? '正在经历' : '探索结果' }}</text>
-        <text class="explore-stage-text">{{ isExploring ? currentExploreStepText : exploration.lastResult }}</text>
+        <text class="explore-stage-text">{{ exploration.lastResult }}</text>
       </view>
 
       <view class="explore-progress-box">
         <view class="row between">
-          <text class="small-text">过程进度</text>
-          <text class="small-text">{{ exploration.currentProcess.length }} / {{ totalExploreStepCount }}</text>
+          <text class="small-text">探索进度</text>
+          <text class="small-text">{{ exploration.currentProcess.length }} 段</text>
         </view>
         <view class="progress">
           <view class="progress-inner" :style="{ width: explorePlaybackPercent + '%' }"></view>
@@ -222,8 +222,8 @@
       </view>
 
       <scroll-view scroll-y class="explore-modal-scroll">
-        <view v-for="(step, index) in exploration.currentProcess" :key="index" class="explore-modal-step">
-          <text class="explore-step-index">第 {{ index + 1 }} 幕</text>
+        <view v-for="(step, index) in [...exploration.currentProcess].reverse()" :key="index" class="explore-modal-step">
+          <text class="explore-step-index">第 {{ exploration.currentProcess.length - index }} 幕</text>
           <text class="explore-step-text">{{ step }}</text>
         </view>
       </scroll-view>
@@ -237,7 +237,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import { useGame } from '@/common/game/useGame.js'
 const {
   syncCurrentPageType,
@@ -457,7 +458,7 @@ function switchExploreView(view) {
   exploreView.value = view
 }
 
-onMounted(() => {
+onShow(() => {
   continueExplorationAfterBattle()
 })
 </script>

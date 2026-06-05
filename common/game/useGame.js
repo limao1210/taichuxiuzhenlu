@@ -1388,6 +1388,10 @@ export function useGame(currentPageType = 'cultivation') {
     return exploration.currentProcess[exploration.currentProcess.length - 1]
   })
   const explorePlaybackPercent = computed(() => {
+    if (explorationFlow.active) {
+      const total = explorationFlow.eventCount || 1
+      return Math.min(100, Math.floor((explorationFlow.eventIndex / total) * 100))
+    }
     const total = totalExploreStepCount.value || 1
     return Math.min(100, Math.floor((exploration.currentProcess.length / total) * 100))
   })
@@ -1410,10 +1414,24 @@ export function useGame(currentPageType = 'cultivation') {
   let saveTimer = null
   let explorationPlaybackTimer = null
   let battlePlaybackTimer = null
+  let exploreEventTimer = null
   const isExploring = ref(false)
   const pendingExplorationOutcome = ref(null)
   const pendingBattleOutcome = ref(null)
   const exploreModalVisible = ref(false)
+  const explorationFlow = reactive({
+    active: false,
+    mapId: '',
+    difficultyId: '',
+    steps: [],
+    rewards: [],
+    events: [],
+    eventIndex: 0,
+    eventCount: 0,
+    rewardBase: 1,
+    afterCostState: null,
+    successRollPassed: false
+  })
 
   function getDayKey() {
     const date = new Date()
@@ -2387,6 +2405,18 @@ export function useGame(currentPageType = 'cultivation') {
 
   function skipExplorationProcess() {
     if (!isExploring.value) return
+    // 实时模式下直接完成所有剩余事件
+    if (explorationFlow.active) {
+      clearExploreEventTimer()
+      // 快速处理剩余事件
+      while (explorationFlow.active && explorationFlow.eventIndex < explorationFlow.eventCount) {
+        const event = pickRandom(explorationFlow.events)
+        applyExploreEvent(event, explorationFlow, true)
+        explorationFlow.eventIndex++
+      }
+      finishExplorationFlow()
+      return
+    }
     finishExplorationPlayback(true)
   }
 
@@ -2398,141 +2428,231 @@ export function useGame(currentPageType = 'cultivation') {
     exploreModalVisible.value = false
   }
 
+  function clearExploreEventTimer() {
+    if (exploreEventTimer) {
+      clearTimeout(exploreEventTimer)
+      exploreEventTimer = null
+    }
+  }
+
+  function applyExploreEvent(event, flow, skipBattle = false) {
+    const rewardBase = flow.rewardBase
+    const steps = flow.steps
+    const rewards = flow.rewards
+
+    // 战斗事件：暂停并跳转战斗页（跳过模式则直接跳过）
+    if (event === 'beast' || event === 'bandit' || event === 'combat') {
+      if (skipBattle) {
+        pushExploreStep(steps, '远处隐现敌影，你趁其不备快速绕过，未与之纠缠。')
+        return 'ok'
+      }
+      const enemyType = event === 'bandit' ? 'cultivator' : 'beast'
+      const enemy = createBattleEnemy(enemyType, {
+        rewardRate: selectedDifficulty.value.rewardRate,
+        combatRate: getDifficultyCombatRate(selectedDifficulty.value.id)
+      })
+      pushExploreStep(steps, `${enemyType === 'cultivator' ? '树后闪出一名' : '忽闻一声咆哮，'}${enemy.name}（${enemy.realmText || '未知境界'}）${enemyType === 'cultivator' ? '拦住了你的去路！' : '从暗处窜出拦住去路！'}`)
+      exploration.currentProcess = steps.slice()
+      exploration.lastResult = '战斗触发中……'
+      explorationFlow.active = false
+      clearExploreEventTimer()
+      saveSilently()
+      safeSetStorage('__xiuxian_pending_explore__', JSON.stringify({
+        mapId: flow.mapId,
+        difficultyId: flow.difficultyId,
+        steps,
+        rewards,
+        events: flow.events,
+        eventIndex: flow.eventIndex + 1,
+        eventCount: flow.eventCount,
+        rewardBase,
+        afterCostState: flow.afterCostState,
+        successRollPassed: flow.successRollPassed,
+        createdAt: Date.now()
+      }))
+      goBattlePage(enemy, { source: 'exploration', returnUrl: '/pages/explore/explore' })
+      return 'battle'
+    }
+
+    if (event === 'herb') {
+      const herbs = Math.max(1, Math.floor((2 + actualFortune.value * 0.15 + Math.random() * 2) * rewardBase))
+      const fruits = Math.max(0, Math.floor((Math.random() + actualFortune.value * 0.05) * rewardBase))
+      inventory.herbs += herbs
+      inventory.fruits += fruits
+      rewards.push(`药材 +${herbs}`)
+      if (fruits > 0) rewards.push(`灵果 +${fruits}`)
+      pushExploreStep(steps, `你拨开乱石旁的藤蔓，发现数株带露灵草，采得药材 ${herbs} 份${fruits > 0 ? `、灵果 ${fruits} 枚` : ''}。`)
+    } else if (event === 'treasure') {
+      const stoneGain = Math.max(12, Math.floor((18 + actualFortune.value * 1.2 + Math.random() * 10) * rewardBase))
+      inventory.spiritStones += stoneGain
+      rewards.push(`灵石 +${stoneGain}`)
+      pushExploreStep(steps, `你发现一处隐蔽石匣，内藏灵石 ${stoneGain} 枚。`)
+    } else if (event === 'scroll') {
+      const scrolls = Math.max(1, Math.floor((1 + actualFortune.value * 0.1 + Math.random()) * rewardBase))
+      inventory.scrolls += scrolls
+      rewards.push(`残卷 +${scrolls}`)
+      pushExploreStep(steps, `你在断碑旁拾得残卷 ${scrolls} 页，上面记载着残缺古法。`)
+    } else if (event === 'equipment') {
+      const candidates = equipmentCatalog.filter(item => item.type !== 'artifact' && item.unlockRealm <= player.realmIndex + 1)
+      if (candidates.length > 0) {
+        const eq = pickRandom(candidates)
+        grantEquipment(eq.id, 1)
+        rewards.push(`装备《${eq.name}》 +1`)
+        pushExploreStep(steps, `你在一处遗迹中发现了${eq.name}，品相尚佳收了起来。`)
+      } else {
+        pushExploreStep(steps, '你找到一处残破遗器，但品相太差，随手弃之。')
+      }
+    } else {
+      const genericReward = Math.max(5, Math.floor((10 + actualFortune.value * 0.5) * rewardBase))
+      inventory.spiritStones += genericReward
+      rewards.push(`灵石 +${genericReward}`)
+      pushExploreStep(steps, `探索中略有收获，获得灵石 ${genericReward} 枚。`)
+    }
+    return 'ok'
+  }
+
+  function scheduleNextExploreEvent() {
+    clearExploreEventTimer()
+    exploreEventTimer = setTimeout(() => {
+      processNextExploreEvent()
+    }, 1100)
+  }
+
+  function processNextExploreEvent() {
+    if (!explorationFlow.active) return
+    const flow = explorationFlow
+
+    if (flow.eventIndex >= flow.eventCount) {
+      finishExplorationFlow()
+      return
+    }
+
+    const event = pickRandom(flow.events)
+    const result = applyExploreEvent(event, flow)
+
+    if (result === 'battle') return
+
+    exploration.currentProcess = flow.steps.slice()
+    exploration.lastResult = `探索进行中（${flow.eventIndex + 1}/${flow.eventCount}）`
+    flow.eventIndex++
+    addExplorationLog(flow.steps[flow.steps.length - 1])
+
+    scheduleNextExploreEvent()
+  }
+
+  function finishExplorationFlow() {
+    const flow = explorationFlow
+    if (!flow.active) return
+    clearExploreEventTimer()
+
+    const steps = flow.steps
+    const rewards = flow.rewards
+    const mapName = (explorationMaps.find(m => m.id === flow.mapId) || selectedMap.value).name
+    const difficultyId = flow.difficultyId
+
+    // 应用血量损失
+    const hpLossPerEventBase = difficultyId === 'abyss' ? 0.30 : difficultyId === 'hard' ? 0.18 : 0.07
+    const totalHpLossPercent = Math.min(0.9, hpLossPerEventBase * flow.eventCount + Math.random() * 0.12)
+    const totalHpLoss = Math.floor(battleMaxHp.value * totalHpLossPercent)
+    const remainingHp = battleMaxHp.value - totalHpLoss
+
+    if (remainingHp <= 0) {
+      const hasEscapeTalisman = normalizeNumber(inventory.items.escapeTalisman, 0) > 0
+      if (hasEscapeTalisman) {
+        inventory.items.escapeTalisman -= 1
+        pushExploreStep(steps, '你身负重伤，危急之中捏碎遁走符，灵光一闪侥幸逃脱。')
+      } else {
+        const lossRateMap = { normal: 0.05, hard: 0.10, abyss: 0.18 }
+        const lossRate = lossRateMap[difficultyId] || 0.05
+        const cultivationLoss = Math.floor(player.cultivation * lossRate)
+        player.cultivation = Math.max(0, player.cultivation - cultivationLoss)
+        rewards.push(`修为因重伤散失 -${cultivationLoss}`)
+        pushExploreStep(steps, `你力竭倒地、真元溃散，醒来时修为已散去 ${cultivationLoss} 点，只得忍痛撤离。`)
+      }
+    } else {
+      player.hp = Math.max(1, remainingHp)
+    }
+
+    pushExploreStep(steps, `天色渐晚，你收束气息离开${mapName}，将所得一一收入储物袋。`)
+    const summary = buildExploreSummary(steps, rewards)
+
+    // 恢复扣费前状态，再应用最终 HP
+    const savedAfterCost = flow.afterCostState
+    if (savedAfterCost) {
+      restoreExploreMutableState(savedAfterCost)
+      if (remainingHp > 0) player.hp = Math.max(1, remainingHp)
+    }
+
+    exploration.lastResult = summary
+    exploration.currentProcess = steps.slice()
+    isExploring.value = false
+    explorationFlow.active = false
+    showFeedback('探索完成', 'success')
+    addLog(`你完成了一次${mapName}探索，共经历 ${steps.length} 段随机过程。`)
+    addExplorationLog(summary)
+    saveSilently()
+  }
+
   function continueExplorationAfterBattle() {
+    // 仅在确实有未完成的战斗探索时才处理
     const raw = safeGetStorage('__xiuxian_pending_explore__')
     if (!raw) return false
+    // 如果探索流已活跃则忽略（防止重复恢复）
+    if (explorationFlow.active) return false
     safeRemoveStorage('__xiuxian_pending_explore__')
     let pending = null
     try {
       pending = typeof raw === 'string' ? JSON.parse(raw) : raw
     } catch (e) { return false }
     if (!pending || !pending.steps) return false
+    if (pending.createdAt && Date.now() - pending.createdAt > 5 * 60 * 1000) return false
 
     const steps = pending.steps || []
     const rewards = pending.rewards || []
-
-    // 判断战斗结果：如果敌人生命 <=0 且我方有交战记录，则胜利
     const battleWon = battle.enemyHp <= 0 && battle.playerHp > 0
     const battleFled = battle.currentProcess && battle.currentProcess.some(s => s.includes('遁走') || s.includes('逃跑成功'))
 
+    // 恢复探索流
+    Object.assign(explorationFlow, {
+      active: true,
+      mapId: pending.mapId || selectedMap.value.id,
+      difficultyId: pending.difficultyId || selectedDifficulty.value.id,
+      steps,
+      rewards,
+      events: pending.events || [],
+      eventIndex: pending.eventIndex || 0,
+      eventCount: pending.eventCount || 0,
+      rewardBase: pending.rewardBase || (selectedDifficulty.value.rewardRate * (1 + sectBonus.value.explore) * 1.75),
+      afterCostState: pending.afterCostState || snapshotExploreMutableState(),
+      successRollPassed: pending.successRollPassed !== false
+    })
+
     if (battleFled) {
-      pushExploreStep(steps, '你虚晃一记，借着爆炸余波与飞扬尘土遁入林中，暂时脱离战斗。')
-    } else if (battleWon) {
+      pushExploreStep(steps, '你虚晃一记，借着余波遁入林中，暂时脱离战斗。')
+      exploration.currentProcess = steps.slice()
+      exploration.lastResult = '战斗中逃跑，探索中断。'
+      finishExplorationFlow()
+      return true
+    }
+
+    if (battleWon) {
       pushExploreStep(steps, '战斗结束，你搜刮敌人遗物，继续深入探索。')
-      // 把战斗奖励文本加入 rewards
-      if (battle.lastResult) {
-        rewards.push(battle.lastResult)
-      }
+      if (battle.lastResult) rewards.push(battle.lastResult)
     } else {
       pushExploreStep(steps, '力战之后负伤不轻，你决定暂避锋芒，收拾行装返回。')
+      exploration.currentProcess = steps.slice()
+      exploration.lastResult = '战斗失利，探索中断。'
+      finishExplorationFlow()
+      return true
     }
 
-    const mapId = pending.mapId || selectedMap.value.id
-    const mapName = (explorationMaps.find(m => m.id === mapId) || selectedMap.value).name
-    const difficultyId = pending.difficultyId || selectedDifficulty.value.id
-    const rewardBase = pending.rewardBase || (selectedDifficulty.value.rewardRate * (1 + sectBonus.value.explore) * 1.75)
-    const remainingEvents = pending.remainingEvents || []
-    const eventCount = pending.eventCount || 0
-
-    // 如果战斗胜利且还有剩余事件，继续处理
-    if (battleWon && remainingEvents.length > 0) {
-      for (let j = 0; j < remainingEvents.length; j += 1) {
-        const event = remainingEvents[j] || pickRandom(getExploreEventPool())
-
-        if (event === 'herb') {
-          const herbs = Math.max(1, Math.floor((2 + actualFortune.value * 0.15 + Math.random() * 2) * rewardBase))
-          const fruits = Math.max(0, Math.floor((Math.random() + actualFortune.value * 0.05) * rewardBase))
-          inventory.herbs += herbs
-          inventory.fruits += fruits
-          rewards.push(`药材 +${herbs}`)
-          if (fruits > 0) rewards.push(`灵果 +${fruits}`)
-          pushExploreStep(steps, `你拨开乱石旁的藤蔓，发现数株带露灵草，采得药材 ${herbs} 份${fruits > 0 ? `、灵果 ${fruits} 枚` : ''}。`)
-          continue
-        }
-
-        if (event === 'beast' || event === 'bandit') {
-          pushExploreStep(steps, '途中又闻兽吼，但你已历经激战，选择绕道而过，不与此兽纠缠。')
-          continue
-        }
-
-        if (event === 'combat') {
-          pushExploreStep(steps, '远处隐现黑影，你谨慎避让，不与来路不明之人交手。')
-          continue
-        }
-
-        if (event === 'treasure') {
-          const stoneGain = Math.max(12, Math.floor((18 + actualFortune.value * 1.2 + Math.random() * 10) * rewardBase))
-          inventory.spiritStones += stoneGain
-          rewards.push(`灵石 +${stoneGain}`)
-          pushExploreStep(steps, `你发现一处隐蔽石匣，内藏灵石 ${stoneGain} 枚。`)
-          continue
-        }
-
-        if (event === 'scroll') {
-          const scrolls = Math.max(1, Math.floor((1 + actualFortune.value * 0.1 + Math.random()) * rewardBase))
-          inventory.scrolls += scrolls
-          rewards.push(`残卷 +${scrolls}`)
-          pushExploreStep(steps, `你在断碑旁拾得残卷 ${scrolls} 页，上面记载着残缺古法。`)
-          continue
-        }
-
-        if (event === 'equipment') {
-          const candidates = equipmentCatalog.filter(item => item.type !== 'artifact' && item.unlockRealm <= player.realmIndex + 1)
-          if (candidates.length > 0) {
-            const eq = pickRandom(candidates)
-            grantEquipment(eq.id, 1)
-            rewards.push(`装备《${eq.name}》 +1`)
-            pushExploreStep(steps, `你在一处遗迹中发现了${eq.name}，品相尚佳收了起来。`)
-          } else {
-            pushExploreStep(steps, '你找到一处残破遗器，但品相太差，随手弃之。')
-          }
-          continue
-        }
-
-        const genericReward = Math.max(5, Math.floor((10 + actualFortune.value * 0.5) * rewardBase))
-        inventory.spiritStones += genericReward
-        rewards.push(`灵石 +${genericReward}`)
-        pushExploreStep(steps, `探索中略有收获，获得灵石 ${genericReward} 枚。`)
-      }
-    }
-
-    // 应用血量损失
-    if (!pending.hpLossDone && !battleFled) {
-      const hpLossPerEventBase = difficultyId === 'abyss' ? 0.30 : difficultyId === 'hard' ? 0.18 : 0.07
-      const totalHpLossPercent = Math.min(0.9, hpLossPerEventBase * (eventCount || 3) + Math.random() * 0.12)
-      const totalHpLoss = Math.floor(battleMaxHp.value * totalHpLossPercent * (battleWon ? 0.5 : 1.0))
-      const remainingHp = battleMaxHp.value - totalHpLoss
-      if (remainingHp <= 0) {
-        const hasEscapeTalisman = normalizeNumber(inventory.items.escapeTalisman, 0) > 0
-        if (hasEscapeTalisman) {
-          inventory.items.escapeTalisman -= 1
-          pushExploreStep(steps, '你身负重伤，危急之中捏碎遁走符，灵光一闪侥幸逃脱。')
-        } else {
-          const lossRateMap = { normal: 0.05, hard: 0.10, abyss: 0.18 }
-          const lossRate = lossRateMap[difficultyId] || 0.05
-          const cultivationLoss = Math.floor(player.cultivation * lossRate)
-          player.cultivation = Math.max(0, player.cultivation - cultivationLoss)
-          rewards.push(`修为因重伤散失 -${cultivationLoss}`)
-          pushExploreStep(steps, `你力竭倒地、真元溃散，醒来时修为已散去 ${cultivationLoss} 点，只得忍痛撤离。`)
-        }
-      } else {
-        player.hp = Math.max(1, remainingHp)
-      }
-    }
-
-    pushExploreStep(steps, `天色渐晚，你收束气息离开${mapName}，将所得一一收入储物袋。`)
-    const finalState = snapshotExploreMutableState()
-    const summary = buildExploreSummary(steps, rewards)
-    const afterCostState = snapshotExploreMutableState()
-    // HP 已直接修改 player.hp，需要反映在 finalState 中
-    Object.assign(finalState.player, { hp: player.hp })
-    restoreExploreMutableState(afterCostState)
-    beginExplorationPlayback({
-      steps,
-      summary,
-      finalState,
-      logText: `你完成了一次${mapName}探索，共经历 ${steps.length} 段随机过程。`
-    })
+    // 战斗胜利，继续探索
+    isExploring.value = true
+    exploreModalVisible.value = true
+    explorationFlow.active = true
+    exploration.currentProcess = steps.slice()
+    exploration.lastResult = `探索进行中（${explorationFlow.eventIndex}/${explorationFlow.eventCount}）`
+    scheduleNextExploreEvent()
     return true
   }
 
@@ -2571,15 +2691,13 @@ export function useGame(currentPageType = 'cultivation') {
     if (successRoll > explorationSuccessRate.value) {
       pushExploreStep(steps, '你误触残破禁制，乱流震荡神识，险些迷失方向。')
       pushExploreStep(steps, '你不再贪功，沿原路退回，记下此处方位，待修为更深时再来。')
-      const finalState = snapshotExploreMutableState()
-      const summary = '探索失利：误入险地，虽及时退回，但未能带出更多收获。'
       restoreExploreMutableState(afterCostState)
-      beginExplorationPlayback({
-        steps,
-        summary,
-        finalState,
-        logText: `你在${mapName}探索失利，受了些许反噬。`
-      })
+      exploreModalVisible.value = true
+      exploration.currentProcess = steps.slice()
+      exploration.lastResult = '探索失利：误入险地，虽及时退回，但未能带出更多收获。'
+      isExploring.value = false
+      showFeedback('探索失利', 'none')
+      addLog(`你在${mapName}探索失利，受了些许反噬。`)
       return
     }
 
@@ -2591,421 +2709,25 @@ export function useGame(currentPageType = 'cultivation') {
     const eventCount = selectedDifficulty.value.id === 'abyss' ? 5 : selectedDifficulty.value.id === 'hard' ? 4 : 3
     const events = getExploreEventPool()
 
-    for (let i = 0; i < eventCount; i += 1) {
-      const event = pickRandom(events)
-
-      if (event === 'herb') {
-        const herbs = Math.max(1, Math.floor((2 + actualFortune.value * 0.15 + Math.random() * 2) * rewardBase))
-        const fruits = Math.max(0, Math.floor((Math.random() + actualFortune.value * 0.05) * rewardBase))
-        inventory.herbs += herbs
-        inventory.fruits += fruits
-        rewards.push(`药材 +${herbs}`)
-        if (fruits > 0) rewards.push(`灵果 +${fruits}`)
-        pushExploreStep(steps, `你拨开乱石旁的藤蔓，发现数株带露灵草，采得药材 ${herbs} 份${fruits > 0 ? `、灵果 ${fruits} 枚` : ''}。`)
-        continue
-      }
-
-      if (event === 'beast') {
-        appendBattleToExplore(steps, rewards, 'beast', {
-          eventCount,
-          eventIndex: i,
-          remainingEvents: events.slice(i + 1),
-          rewardBase
-        })
-        return
-      }
-
-      if (event === 'bandit') {
-        appendBattleToExplore(steps, rewards, 'cultivator', {
-          eventCount,
-          eventIndex: i,
-          remainingEvents: events.slice(i + 1),
-          rewardBase
-        })
-        return
-      }
-
-      if (event === 'treasure') {
-        const stoneGain = Math.max(12, Math.floor((18 + actualFortune.value * 1.2 + Math.random() * 10) * rewardBase))
-        inventory.spiritStones += stoneGain
-        rewards.push(`灵石 +${stoneGain}`)
-        let extra = ''
-        if (Math.random() < 0.35) {
-          player.breakthroughPills += 1
-          rewards.push('突破丹 +1')
-          extra = '，并从匣底寻得突破丹 1 枚'
-        }
-        pushExploreStep(steps, `你在石壁裂隙中发现一方旧匣，得灵石 ${stoneGain} 枚${extra}。`)
-        continue
-      }
-
-      if (event === 'traveler') {
-        const points = Math.max(1, Math.floor((1 + actualComprehension.value * 0.06 + Math.random()) * rewardBase))
-        player.techniquePoints += points
-        rewards.push(`功法点 +${points}`)
-        pushExploreStep(steps, `你偶遇一名云游同道，与其论道片刻，获得功法点 ${points} 点。`)
-        continue
-      }
-
-      if (event === 'scroll') {
-        const scrolls = Math.max(1, Math.floor((1 + actualComprehension.value * 0.05 + Math.random()) * rewardBase))
-        const stones = Math.max(6, Math.floor((10 + actualFortune.value * 0.7) * rewardBase))
-        inventory.scrolls += scrolls
-        inventory.spiritStones += stones
-        rewards.push(`残卷 +${scrolls}`, `灵石 +${stones}`)
-        let extra = ''
-        if (Math.random() < 0.3) {
-          grantRecipeFragment(1)
-          rewards.push('高阶丹方残卷 +1')
-          extra = '，另有一页高阶丹方残卷夹在其中'
-        }
-        const unlockText = Math.random() < 0.25 ? maybeUnlockRecipeFromEvent() : ''
-        if (unlockText) rewards.push(unlockText.replace('并意外', ''))
-        pushExploreStep(steps, `你在残破石台上拾得残卷 ${scrolls} 页、灵石 ${stones} 枚${extra}${unlockText ? `，${unlockText}` : ''}。`)
-        continue
-      }
-
-      if (event === 'shrine') {
-        const gain = Math.max(1, Math.floor((1 + actualFortune.value * 0.04) * rewardBase))
-        player.techniquePoints += gain
-        rewards.push(`功法点 +${gain}`)
-        pushExploreStep(steps, `你发现一座被藤蔓遮住的古旧石龛，拂去尘土后静坐片刻，悟得功法点 ${gain} 点。`)
-        continue
-      }
-
-      if (event === 'trap') {
-        const roll = Math.random() * 100
-        if (roll < actualComprehension.value * 3 + actualFortune.value * 2) {
-          const stones = Math.max(10, Math.floor((14 + actualFortune.value) * rewardBase))
-          inventory.spiritStones += stones
-          rewards.push(`灵石 +${stones}`)
-          pushExploreStep(steps, `前方阵纹暗藏杀机，你提前看破生门，反从阵眼取出灵石 ${stones} 枚。`)
-        } else {
-          pushExploreStep(steps, '你踏入一处残阵，虽及时脱身，仍被阵风逼退数步。')
-        }
-        continue
-      }
-
-      if (event === 'cave') {
-        const ores = Math.max(1, Math.floor((2 + Math.random() * 2 + actualBone.value * 0.05) * rewardBase))
-        const furnaceStones = Math.random() < 0.35 ? 1 : 0
-        inventory.ores += ores
-        inventory.furnaceStones += furnaceStones
-        rewards.push(`矿石 +${ores}`)
-        if (furnaceStones) rewards.push('炉石 +1')
-        pushExploreStep(steps, `你在山腹洞窟中听见地火轻鸣，凿得矿石 ${ores} 份${furnaceStones ? '，并拾得炉石 1 枚' : ''}。`)
-        continue
-      }
-
-      if (event === 'market') {
-        const herbs = Math.max(1, Math.floor((1 + actualFortune.value * 0.1) * rewardBase))
-        const cost = Math.min(inventory.spiritStones, Math.max(6, Math.floor(8 * rewardBase)))
-        if (cost > 0) {
-          inventory.spiritStones -= cost
-          inventory.herbs += herbs
-          rewards.push(`药材 +${herbs}`, `灵石 -${cost}`)
-          pushExploreStep(steps, `你遇到背篓老修摆出小摊，以灵石 ${cost} 枚换得药材 ${herbs} 份。`)
-        } else {
-          player.techniquePoints += 1
-          rewards.push('功法点 +1')
-          pushExploreStep(steps, '你遇到背篓老修，可惜囊中灵石不足，只得与他闲谈片刻，仍有所悟，功法点 +1。')
-        }
-        continue
-      }
-
-      if (event === 'epiphany') {
-        const gain = Math.max(2, Math.floor((2 + actualComprehension.value * 0.08) * rewardBase))
-        player.techniquePoints += gain
-        rewards.push(`功法点 +${gain}`)
-        pushExploreStep(steps, `你观山势起伏，忽然明悟功法运转之理，功法点增加 ${gain} 点。`)
-        continue
-      }
-
-      if (event === 'storm') {
-        const cultivation = Math.max(20, Math.floor((30 + player.realmIndex * 18 + actualBone.value) * rewardBase))
-        player.cultivation += cultivation
-        rewards.push(`修为 +${cultivation}`)
-        pushExploreStep(steps, `秘境忽降灵雷，你以护体真元硬接雷息，淬得修为 ${cultivation} 点。`)
-        continue
-      }
-
-      if (event === 'spiritSpring') {
-        const cultivation = Math.max(18, Math.floor((24 + actualComprehension.value * 1.2 + player.realmLayer * 4) * rewardBase))
-        player.cultivation += cultivation
-        rewards.push(`修为 +${cultivation}`)
-        pushExploreStep(steps, `你在石缝间寻得一眼隐秘灵泉，泉水入喉，修为增长 ${cultivation} 点。`)
-        continue
-      }
-
-      if (event === 'hiddenRealm') {
-        const stones = Math.max(20, Math.floor((24 + actualFortune.value * 1.6 + player.realmIndex * 12) * rewardBase))
-        const fragmentChance = 0.35 + Math.min(0.3, actualFortune.value * 0.01)
-        inventory.spiritStones += stones
-        rewards.push(`灵石 +${stones}`)
-        let extra = ''
-        if (Math.random() < fragmentChance) {
-          grantRecipeFragment(1)
-          rewards.push('丹方残卷 +1')
-          extra = '，并在石匣夹层中找到丹方残卷 1 页'
-        }
-        pushExploreStep(steps, `你误入一处小型洞天，灵光散落如雨，收得灵石 ${stones} 枚${extra}。`)
-        continue
-      }
-
-      if (event === 'bandit') {
-        const roll = Math.random() * 100
-        const winLine = 45 + actualBone.value * 2 + equipmentBonus.value.explore * 100
-        if (roll <= winLine) {
-          const stones = Math.max(18, Math.floor((20 + actualBone.value + Math.random() * 12) * rewardBase))
-          inventory.spiritStones += stones
-          rewards.push(`灵石 +${stones}`)
-          pushExploreStep(steps, `几名劫修拦路试探，你剑诀一展逼退众人，反缴得灵石 ${stones} 枚。`)
-        } else {
-          const lost = Math.min(inventory.spiritStones, Math.max(8, Math.floor(12 * rewardBase)))
-          inventory.spiritStones -= lost
-          rewards.push(`灵石 -${lost}`)
-          pushExploreStep(steps, `你遭遇劫修围堵，虽成功脱身，却遗失灵石 ${lost} 枚。`)
-        }
-        continue
-      }
-
-      if (event === 'meteorite') {
-        const ores = Math.max(2, Math.floor((3 + player.realmIndex + Math.random() * 3) * rewardBase))
-        const furnaceStones = Math.random() < 0.55 ? 1 : 0
-        inventory.ores += ores
-        inventory.furnaceStones += furnaceStones
-        rewards.push(`矿石 +${ores}`)
-        if (furnaceStones) rewards.push('炉石 +1')
-        pushExploreStep(steps, `一枚天外陨火坠入山岭，你待余温稍散后采得矿石 ${ores} 份${furnaceStones ? '、炉石 1 枚' : ''}。`)
-        continue
-      }
-
-      if (event === 'oldTomb') {
-        const scrolls = Math.max(1, Math.floor((1 + actualComprehension.value * 0.06 + player.realmIndex * 0.3) * rewardBase))
-        inventory.scrolls += scrolls
-        rewards.push(`残卷 +${scrolls}`)
-        let eqText = ''
-        const artifactReward = tryGrantRandomArtifact(selectedMap.value.need.realmIndex)
-        if (artifactReward) {
-          rewards.push(artifactReward)
-          eqText = `，并在墓室最深处见得${artifactReward.replace(' +1', '')}`
-        } else if (Math.random() < 0.28) {
-          const pool = equipmentCatalog.filter(item => item.unlockRealm <= selectedMap.value.need.realmIndex && item.id !== 'chaosPearl')
-          const eqId = pickRandom(pool).id
-          grantEquipment(eqId, 1)
-          const eqName = equipmentCatalog.find(item => item.id === eqId)?.name || '旧宝'
-          rewards.push(`${eqName} +1`)
-          eqText = `，还从陪葬木匣中取出《${eqName}》一件`
-        }
-        pushExploreStep(steps, `你开启半塌墓室，避开腐朽机关后取得残卷 ${scrolls} 页${eqText}。`)
-        continue
-      }
-
-      if (event === 'daoStorm') {
-        const cultivation = Math.max(45, Math.floor((50 + player.realmIndex * 32 + actualComprehension.value * 1.5) * rewardBase))
-        player.cultivation += cultivation
-        rewards.push(`修为 +${cultivation}`)
-        pushExploreStep(steps, `虚空道韵骤然成风暴，你强行观摩其中纹理，修为暴涨 ${cultivation} 点。`)
-        continue
-      }
-
-      if (event === 'equipment') {
-        const artifactReward = tryGrantRandomArtifact(selectedMap.value.need.realmIndex)
-        if (artifactReward) {
-          rewards.push(artifactReward)
-          pushExploreStep(steps, `你循着一缕不可言说的道韵深入石窟，竟获得${artifactReward.replace(' +1', '')}。`)
-          continue
-        }
-        const unlockedEquipment = equipmentCatalog.filter(item => item.unlockRealm <= selectedMap.value.need.realmIndex)
-        const commonPool = unlockedEquipment.filter(item => item.id !== 'chaosPearl')
-        const pool = player.realmIndex >= 3 && Math.random() < 0.18 ? unlockedEquipment : commonPool
-        const eqId = pickRandom(pool).id
-        grantEquipment(eqId, 1)
-        const eqName = equipmentCatalog.find(item => item.id === eqId)?.name || '宝物'
-        rewards.push(`${eqName} +1`)
-        pushExploreStep(steps, `你循着微弱宝光深入石窟，最终获得装备《${eqName}》一件。`)
-        continue
-      }
-
-      if (event === 'spiritStoneRich') {
-        const stones = Math.max(30, Math.floor((45 + actualFortune.value * 2.2 + player.realmIndex * 8) * rewardBase))
-        inventory.spiritStones += stones
-        rewards.push(`灵石 +${stones}`)
-        let extra = ''
-        if (Math.random() < 0.25 + actualFortune.value * 0.008) {
-          const jadeGain = 1 + Math.floor(Math.random() * 2)
-          inventory.jade = (inventory.jade || 0) + jadeGain
-          rewards.push(`仙玉 +${jadeGain}`)
-          extra = `，更在矿脉深处挖得仙玉 ${jadeGain} 枚`
-        }
-        pushExploreStep(steps, `你以神识探入山壁裂隙，发现一条隐藏灵脉，采得灵石 ${stones} 枚${extra}。`)
-        continue
-      }
-
-      if (event === 'pillFind') {
-        const possiblePills = cultivationPillDefs.filter(p => p.realmIndex <= player.realmIndex + 1)
-        if (possiblePills.length) {
-          const pill = pickRandom(possiblePills)
-          const count = Math.max(1, Math.floor((1 + Math.random() * 2) * rewardBase))
-          inventory.pills[pill.key] = (inventory.pills[pill.key] || 0) + count
-          rewards.push(`${pill.name} +${count}`)
-          pushExploreStep(steps, `你在前人遗骸旁拾得一只丹瓶，内藏丹药「${pill.name}」${count} 枚。`)
-        } else {
-          const stones = Math.max(15, Math.floor((20 + Math.random() * 10) * rewardBase))
-          inventory.spiritStones += stones
-          rewards.push(`灵石 +${stones}`)
-          pushExploreStep(steps, `你发现一座破旧丹室，丹瓶皆已干涸，仅剩散落灵石 ${stones} 枚。`)
-        }
-        continue
-      }
-
-      if (event === 'tempBuff') {
-        const buffType = pickRandom(['bone', 'comprehension', 'fortune'])
-        const buffNames = { bone: '根骨', comprehension: '悟性', fortune: '福缘' }
-        const buffAmount = Math.max(1, Math.floor((1 + Math.random() * 2) * rewardBase))
-        const buffKey = `temp${buffType.charAt(0).toUpperCase() + buffType.slice(1)}Buff`
-        if (!exploration.tempBuffs) exploration.tempBuffs = {}
-        exploration.tempBuffs[buffKey] = (exploration.tempBuffs[buffKey] || 0) + buffAmount
-        rewards.push(`临时${buffNames[buffType]} +${buffAmount}`)
-        pushExploreStep(steps, `你踏入一处灵息浓郁之地，周身经脉被灵气涤荡，${buffNames[buffType]}暂时提升 ${buffAmount} 点。`)
-        continue
-      }
-
-      if (event === 'wanderingCultivator') {
-        const roll = Math.random()
-        if (roll < 0.4) {
-          const points = Math.max(2, Math.floor((2 + actualComprehension.value * 0.12) * rewardBase))
-          player.techniquePoints += points
-          rewards.push(`功法点 +${points}`)
-          pushExploreStep(steps, `你与一位云游散修论道三日，豁然开朗，获得功法点 ${points} 点。`)
-        } else if (roll < 0.75) {
-          const tradeStones = Math.max(8, Math.floor((10 + Math.random() * 8) * rewardBase))
-          inventory.spiritStones -= Math.min(inventory.spiritStones, tradeStones)
-          const herbs = Math.max(2, Math.floor((3 + Math.random() * 3) * rewardBase))
-          inventory.herbs += herbs
-          rewards.push(`药材 +${herbs}`, `灵石 -${tradeStones}`)
-          pushExploreStep(steps, `路遇一名行脚药师，以灵石 ${tradeStones} 枚换得药材 ${herbs} 份。`)
-        } else {
-          const scrolls = Math.max(1, Math.floor((1 + actualFortune.value * 0.1) * rewardBase))
-          inventory.scrolls += scrolls
-          rewards.push(`残卷 +${scrolls}`)
-          pushExploreStep(steps, `偶遇的散修见你道心坚定，赠予残卷 ${scrolls} 页以结善缘。`)
-        }
-        continue
-      }
-
-      if (event === 'hiddenCave') {
-        const ores = Math.max(2, Math.floor((3 + Math.random() * 3 + actualBone.value * 0.06) * rewardBase))
-        const scrolls = Math.random() < 0.45 ? Math.max(1, Math.floor((1 + Math.random() * 2) * rewardBase)) : 0
-        inventory.ores += ores
-        inventory.scrolls += scrolls
-        rewards.push(`矿石 +${ores}`)
-        if (scrolls) rewards.push(`残卷 +${scrolls}`)
-        let eqText = ''
-        if (Math.random() < 0.2 + actualFortune.value * 0.008) {
-          const pool = equipmentCatalog.filter(item => item.unlockRealm <= selectedMap.value.need.realmIndex && item.id !== 'chaosPearl')
-          if (pool.length) {
-            const eqId = pickRandom(pool).id
-            grantEquipment(eqId, 1)
-            const eqName = equipmentCatalog.find(item => item.id === eqId)?.name || '遗宝'
-            rewards.push(`${eqName} +1`)
-            eqText = `，并在石室尽头找到《${eqName}》一件`
-          }
-        }
-        pushExploreStep(steps, `乱藤遮掩处竟有一个隐蔽洞穴，内中矿石 ${ores} 份${scrolls ? `、残卷 ${scrolls} 页` : ''}${eqText}。`)
-        continue
-      }
-
-      if (event === 'fragmentComprehend') {
-        const points = Math.max(3, Math.floor((3 + actualComprehension.value * 0.15) * rewardBase))
-        player.techniquePoints += points
-        rewards.push(`功法点 +${points}`)
-        let fragText = ''
-        if (Math.random() < 0.35 + actualComprehension.value * 0.01) {
-          grantRecipeFragment(1)
-          rewards.push('丹方残卷 +1')
-          fragText = '，并将石上部分丹方拓印为残卷'
-        }
-        const unlockText = Math.random() < 0.2 ? maybeUnlockRecipeFromEvent() : ''
-        if (unlockText) rewards.push(unlockText.replace('并意外', ''))
-        pushExploreStep(steps, `你观摩岩壁上残存的古老功诀，悟得功法点 ${points} 点${fragText}${unlockText ? `，${unlockText}` : ''}。`)
-        continue
-      }
-
-      if (event === 'spiritEruption') {
-        const cultivation = Math.max(28, Math.floor((35 + actualBone.value * 1.5 + player.realmIndex * 16) * rewardBase))
-        const hpRecover = Math.floor(battleMaxHp.value * (0.15 + Math.random() * 0.15))
-        player.cultivation += cultivation
-        player.hp = Math.min(battleMaxHp.value, player.hp + hpRecover)
-        rewards.push(`修为 +${cultivation}`, `生命恢复 +${hpRecover}`)
-        pushExploreStep(steps, `地底灵脉骤然涌动，灵气如喷泉般涌出，你吸收灵潮，修为增长 ${cultivation} 点，生命恢复 ${hpRecover} 点。`)
-        continue
-      }
-
-      if (event === 'ancientRuin') {
-        const roll = Math.random()
-        if (roll < 0.55) {
-          const cultivation = Math.max(55, Math.floor((60 + player.realmIndex * 38 + actualComprehension.value * 2) * rewardBase))
-          player.cultivation += cultivation
-          rewards.push(`修为 +${cultivation}`)
-          const scrolls = Math.max(1, Math.floor((2 + actualComprehension.value * 0.12) * rewardBase))
-          inventory.scrolls += scrolls
-          rewards.push(`残卷 +${scrolls}`)
-          pushExploreStep(steps, `你破解废墟外围禁制，从残碑中悟得古法，修为增长 ${cultivation} 点，获残卷 ${scrolls} 页。`)
-        } else {
-          const stoneCost = Math.min(inventory.spiritStones, Math.max(10, Math.floor(15 * rewardBase)))
-          inventory.spiritStones -= stoneCost
-          rewards.push(`灵石 -${stoneCost}`)
-          pushExploreStep(steps, `废墟中央禁制远超预期，你被阵纹震退，损失灵石 ${stoneCost} 枚。`)
-        }
-        continue
-      }
-
-      if (event === 'combat') {
-        appendBattleToExplore(steps, rewards, 'beast', {
-          eventCount,
-          eventIndex: i,
-          remainingEvents: events.slice(i + 1),
-          rewardBase
-        })
-        return
-      }
-    }
-
-    const hpLossPerEventBase = selectedDifficulty.value.id === 'abyss' ? 0.30 : selectedDifficulty.value.id === 'hard' ? 0.18 : 0.07
-    const totalHpLossPercent = hpLossPerEventBase * eventCount + Math.random() * 0.12
-    const currentMaxHp = battleMaxHp.value
-    const totalHpLoss = Math.floor(currentMaxHp * totalHpLossPercent)
-    const remainingHp = currentMaxHp - totalHpLoss
-
-    if (remainingHp <= 0) {
-      const hasEscapeTalisman = normalizeNumber(inventory.items.escapeTalisman, 0) > 0
-      const escapeChance = 0.2 + (hasEscapeTalisman ? 0.15 : 0) + 0.2
-      if (Math.random() < escapeChance) {
-        if (hasEscapeTalisman) inventory.items.escapeTalisman -= 1
-        pushExploreStep(steps, hasEscapeTalisman
-          ? '你身负重伤，危急之中捏碎遁走符，灵光一闪侥幸逃脱，修为未损。'
-          : '你身负重伤，危急之中以秘术遁走，侥幸逃脱，修为未损。')
-      } else {
-        const lossRateMap = { normal: 0.05, hard: 0.10, abyss: 0.18 }
-        const lossRate = lossRateMap[selectedDifficulty.value.id] || 0.05
-        const cultivationLoss = Math.floor(player.cultivation * lossRate)
-        player.cultivation = Math.max(0, player.cultivation - cultivationLoss)
-        rewards.push(`修为因重伤散失 -${cultivationLoss}`)
-        pushExploreStep(steps, `你力竭倒地、真元溃散，醒来时修为已散去 ${cultivationLoss} 点，只得忍痛撤离。`)
-      }
-    }
-
-    pushExploreStep(steps, `天色渐晚，你收束气息离开${mapName}，将所得一一收入储物袋。`)
-    const finalState = snapshotExploreMutableState()
-    const summary = buildExploreSummary(steps, rewards)
-    restoreExploreMutableState(afterCostState)
-    beginExplorationPlayback({
+    Object.assign(explorationFlow, {
+      active: true,
+      mapId: selectedMap.value.id,
+      difficultyId: selectedDifficulty.value.id,
       steps,
-      summary,
-      finalState,
-      logText: `你完成了一次${mapName}探索，共经历 ${steps.length} 段随机过程。`
+      rewards,
+      events,
+      eventIndex: 0,
+      eventCount,
+      rewardBase,
+      afterCostState,
+      successRollPassed: true
     })
+
+    isExploring.value = true
+    exploreModalVisible.value = true
+    exploration.currentProcess = steps.slice()
+    exploration.lastResult = '探索进行中（0/' + eventCount + '）'
+    scheduleNextExploreEvent()
   }
 
   function clampPlayerHp() {
@@ -3681,7 +3403,8 @@ export function useGame(currentPageType = 'cultivation') {
       eventIndex: loopState.eventIndex || 0,
       remainingEvents: loopState.remainingEvents || [],
       rewardBase: loopState.rewardBase || (selectedDifficulty.value.rewardRate * (1 + sectBonus.value.explore) * 1.75),
-      hpLossDone: false
+      hpLossDone: false,
+      createdAt: Date.now()
     }
     safeSetStorage('__xiuxian_pending_explore__', JSON.stringify(pendingExplore))
     goBattlePage(enemy, { source: 'exploration', returnUrl: '/pages/explore/explore' })

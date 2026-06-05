@@ -4,16 +4,11 @@
       <view class="topbar-main">
 <!--        <text class="eyebrow">文字修仙 · 微信小程序完整基础版</text> -->
         <text class="title">太初修真录</text>
-        <text class="subtitle">已拆分为修仙、探索、炼丹、宗门、宝物五个页面，沿用旧版本地存档。</text>
+        <text class="subtitle">宝物页面</text>
       </view>
 
       
 
-      <view class="topbar-buttons">
-        <button class="ghost-btn mini-btn" @click="saveGame">手动存档</button>
-        <button class="ghost-btn mini-btn" @click="loadGame">读档</button>
-        <button class="danger-btn mini-btn" @click="resetGame">重开</button>
-      </view>
     </view>
 
 
@@ -62,15 +57,9 @@
                 <text class="small-text">当前吸收：{{ canUseCultivationPill(pill.key) ? formatNumber(getCultivationPillGain(pill.key)) + ' 修为' : '境界不足，不能吸收' }}</text>
                 <text class="small-text">同阶固定修为：{{ formatNumber(pill.gain) }}</text>
               </view>
-              <view class="shop-buy-row mt-12">
-                <view class="shop-amount-box">
-                  <text class="small-text">数量</text>
-                  <input class="shop-amount-input" type="number" :value="getPillUseQty(pill.key)" @input="onPillQtyInput(pill.key, $event)" />
-                </view>
-                <button class="primary-btn small-btn" :disabled="!canUseCultivationPill(pill.key) || (inventory.pills[pill.key] || 0) < getPillUseQty(pill.key)" @click="useCultivationPill(pill.key, getPillUseQty(pill.key))">
-                  {{ canUseCultivationPill(pill.key) ? '吸收 ×' + getPillUseQty(pill.key) : '高阶不可吸收' }}
-                </button>
-              </view>
+              <button class="primary-btn small-btn" :disabled="!canUseCultivationPill(pill.key)" @click="useCultivationPill(pill.key)">
+                {{ canUseCultivationPill(pill.key) ? '吸收丹药' : '高阶不可吸收' }}
+              </button>
             </view>
           </view>
 
@@ -81,30 +70,9 @@
             </view>
           </view>
           <view v-if="ownedSpecialPills.length > 0" class="action-row">
-            <view v-if="inventory.pills.bone > 0" class="shop-buy-row mt-12">
-              <view class="shop-amount-box">
-                <text class="small-text">洗髓丹</text>
-                <input class="shop-amount-input" type="number" :value="getAttrPillUseQty('bone')" @input="onAttrPillQtyInput('bone', $event)" />
-                <text class="small-text">×{{ getAttrPillUseQty('bone') }}</text>
-              </view>
-              <button class="secondary-btn small-btn" @click="useAttributePill('bone', getAttrPillUseQty('bone'))">使用根骨丹</button>
-            </view>
-            <view v-if="inventory.pills.comprehension > 0" class="shop-buy-row mt-12">
-              <view class="shop-amount-box">
-                <text class="small-text">悟心丹</text>
-                <input class="shop-amount-input" type="number" :value="getAttrPillUseQty('comprehension')" @input="onAttrPillQtyInput('comprehension', $event)" />
-                <text class="small-text">×{{ getAttrPillUseQty('comprehension') }}</text>
-              </view>
-              <button class="secondary-btn small-btn" @click="useAttributePill('comprehension', getAttrPillUseQty('comprehension'))">使用悟心丹</button>
-            </view>
-            <view v-if="inventory.pills.fortune > 0" class="shop-buy-row mt-12">
-              <view class="shop-amount-box">
-                <text class="small-text">天缘丹</text>
-                <input class="shop-amount-input" type="number" :value="getAttrPillUseQty('fortune')" @input="onAttrPillQtyInput('fortune', $event)" />
-                <text class="small-text">×{{ getAttrPillUseQty('fortune') }}</text>
-              </view>
-              <button class="secondary-btn small-btn" @click="useAttributePill('fortune', getAttrPillUseQty('fortune'))">使用福缘丹</button>
-            </view>
+            <button v-if="inventory.pills.bone > 0" class="secondary-btn" @click="useAttributePill('bone')">使用根骨丹</button>
+            <button v-if="inventory.pills.comprehension > 0" class="secondary-btn" @click="useAttributePill('comprehension')">使用悟心丹</button>
+            <button v-if="inventory.pills.fortune > 0" class="secondary-btn" @click="useAttributePill('fortune')">使用福缘丹</button>
           </view>
         </view>
 
@@ -249,22 +217,8 @@
             </view>
           </view>
           <view v-if="ownedItemStats.length > 0" class="action-row">
-            <view v-if="inventory.items.exploreTalisman > 0" class="shop-buy-row mt-12">
-              <view class="shop-amount-box">
-                <text class="small-text">探索符</text>
-                <input class="shop-amount-input" type="number" :value="getItemUseQty('exploreTalisman')" @input="onItemQtyInput('exploreTalisman', $event)" />
-                <text class="small-text">×{{ getItemUseQty('exploreTalisman') }}</text>
-              </view>
-              <button class="primary-btn small-btn" @click="useExploreTalisman(getItemUseQty('exploreTalisman'))">使用探索符</button>
-            </view>
-            <view v-if="inventory.items.acceleratorCharm > 0" class="shop-buy-row mt-12">
-              <view class="shop-amount-box">
-                <text class="small-text">加速符</text>
-                <input class="shop-amount-input" type="number" :value="getItemUseQty('acceleratorCharm')" @input="onItemQtyInput('acceleratorCharm', $event)" />
-                <text class="small-text">×{{ getItemUseQty('acceleratorCharm') }}</text>
-              </view>
-              <button class="secondary-btn small-btn" @click="useAcceleratorCharm(getItemUseQty('acceleratorCharm'))">使用加速符</button>
-            </view>
+            <button v-if="inventory.items.exploreTalisman > 0" class="primary-btn" @click="useExploreTalisman">使用探索符</button>
+            <button v-if="inventory.items.acceleratorCharm > 0" class="secondary-btn" @click="useAcceleratorCharm">使用加速符</button>
           </view>
         </view>
 
@@ -606,9 +560,6 @@ const shopView = ref('equipment')
 const shopBuyAmounts = reactive({})
 const materialSellQty = reactive({ herbs: 5, ores: 4 })
 const materialDonateQty = reactive({ herbs: 5, ores: 4 })
-const pillUseQty = reactive({})
-const attrPillUseQty = reactive({ bone: 1, comprehension: 1, fortune: 1 })
-const itemUseQty = reactive({ exploreTalisman: 1, acceleratorCharm: 1 })
 
 const shopTabs = [
   { key: 'equipment', name: '装备', category: '装备' },
@@ -695,39 +646,6 @@ function switchEquipmentView(type) {
 function switchShopView(type) {
   shopView.value = type
   showFeedback(`商店分类已切换到${currentShopTabName.value}`)
-}
-
-function getPillUseQty(key) {
-  const value = Number(pillUseQty[key])
-  return Number.isFinite(value) && value > 0 ? Math.max(1, Math.min(9999, Math.floor(value))) : 1
-}
-
-function onPillQtyInput(key, event) {
-  const raw = event?.detail?.value
-  const value = Math.max(1, Math.min(9999, Math.floor(Number(raw) || 1)))
-  pillUseQty[key] = value
-}
-
-function getAttrPillUseQty(type) {
-  const value = Number(attrPillUseQty[type])
-  return Number.isFinite(value) && value > 0 ? Math.max(1, Math.min(9999, Math.floor(value))) : 1
-}
-
-function onAttrPillQtyInput(type, event) {
-  const raw = event?.detail?.value
-  const value = Math.max(1, Math.min(9999, Math.floor(Number(raw) || 1)))
-  attrPillUseQty[type] = value
-}
-
-function getItemUseQty(key) {
-  const value = Number(itemUseQty[key])
-  return Number.isFinite(value) && value > 0 ? Math.max(1, Math.min(9999, Math.floor(value))) : 1
-}
-
-function onItemQtyInput(key, event) {
-  const raw = event?.detail?.value
-  const value = Math.max(1, Math.min(9999, Math.floor(Number(raw) || 1)))
-  itemUseQty[key] = value
 }
 </script>
 

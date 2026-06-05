@@ -10,11 +10,9 @@
       
 
       <view class="topbar-buttons">
-        <!-- <button class="ghost-btn mini-btn" @click="saveGame">手动存档</button>
-        <button class="ghost-btn mini-btn" @click="loadGame">读档</button> -->
         <button class="ghost-btn mini-btn" @click="openSaves">存档管理</button>
         <button class="ghost-btn mini-btn" @click="goPage('/pages/wiki/wiki', '已打开修真百科')">百科</button>
-        <!-- <button class="danger-btn mini-btn" @click="resetGame">重开</button> -->
+        <button class="danger-btn mini-btn" @click="openDebug">调试</button>
       </view>
     </view>
 
@@ -283,10 +281,123 @@
       </view>
     </view>
   </view>
+
+  <!-- 开发调试面板 -->
+  <view v-if="debugVisible" class="debug-mask" @click="closeDebugMask">
+    <view class="debug-panel card" @click.stop>
+      <view class="debug-head">
+        <text class="debug-title">开发者调试</text>
+        <button class="ghost-btn mini-btn" @click="debugVisible = false">关闭</button>
+      </view>
+
+      <view v-if="!debugAuthed" class="debug-auth">
+        <text class="small-text mb-12">请输入调试密码</text>
+        <input class="debug-pwd-input" type="password" v-model="debugPwd" placeholder="密码" />
+        <button class="primary-btn small-btn mt-12" @click="checkDebugPwd">验证</button>
+        <text v-if="debugPwdError" class="small-text mt-12" style="color:#e55">密码错误</text>
+      </view>
+
+      <scroll-view v-else scroll-y class="debug-scroll">
+        <view class="debug-section">
+          <text class="debug-section-title">境界</text>
+          <view class="debug-row">
+            <text class="small-text">当前：{{ currentRealmName }} {{ player.realmLayer }}层</text>
+          </view>
+          <view class="debug-btns">
+            <button class="secondary-btn small-btn" @click="debugAddLayer">+1层</button>
+            <button class="secondary-btn small-btn" @click="debugAddRealm">升一个大境界</button>
+            <button class="secondary-btn small-btn" @click="debugSetRealm(8)">到渡劫期</button>
+            <button class="secondary-btn small-btn" @click="debugSetRealm(18)">到神尊期</button>
+          </view>
+        </view>
+
+        <view class="debug-section">
+          <text class="debug-section-title">属性</text>
+          <view class="debug-input-row">
+            <text class="small-text">修为 +</text>
+            <input class="debug-num-input" type="number" v-model="debugAmounts.cultivation" />
+            <button class="secondary-btn small-btn" @click="debugAdd('cultivation')">加</button>
+          </view>
+          <view class="debug-input-row">
+            <text class="small-text">生命 +</text>
+            <input class="debug-num-input" type="number" v-model="debugAmounts.hp" />
+            <button class="secondary-btn small-btn" @click="debugAdd('hp')">加</button>
+          </view>
+          <view class="debug-input-row">
+            <text class="small-text">灵力 +</text>
+            <input class="debug-num-input" type="number" v-model="debugAmounts.spirit" />
+            <button class="secondary-btn small-btn" @click="debugAdd('spirit')">加</button>
+          </view>
+          <view class="debug-input-row">
+            <text class="small-text">灵石 +</text>
+            <input class="debug-num-input" type="number" v-model="debugAmounts.spiritStones" />
+            <button class="secondary-btn small-btn" @click="debugAdd('spiritStones')">加</button>
+          </view>
+          <view class="debug-input-row">
+            <text class="small-text">仙玉 +</text>
+            <input class="debug-num-input" type="number" v-model="debugAmounts.jade" />
+            <button class="secondary-btn small-btn" @click="debugAdd('jade')">加</button>
+          </view>
+          <view class="debug-input-row">
+            <text class="small-text">功法点 +</text>
+            <input class="debug-num-input" type="number" v-model="debugAmounts.techniquePoints" />
+            <button class="secondary-btn small-btn" @click="debugAdd('techniquePoints')">加</button>
+          </view>
+          <view class="debug-input-row">
+            <text class="small-text">突破丹 +</text>
+            <input class="debug-num-input" type="number" v-model="debugAmounts.breakthroughPills" />
+            <button class="secondary-btn small-btn" @click="debugAdd('breakthroughPills')">加</button>
+          </view>
+        </view>
+
+        <view class="debug-section">
+          <text class="debug-section-title">丹药道具</text>
+          <view class="debug-btns">
+            <button v-for="pill in cultivationPillDefs" :key="'dbg-pill-' + pill.key" class="secondary-btn small-btn" @click="debugGivePill(pill.key)">{{ pill.name }} +10</button>
+          </view>
+          <view class="debug-btns mt-12">
+            <button class="secondary-btn small-btn" @click="debugAdd('bonePill')">根骨丹 +10</button>
+            <button class="secondary-btn small-btn" @click="debugAdd('comprehensionPill')">悟心丹 +10</button>
+            <button class="secondary-btn small-btn" @click="debugAdd('fortunePill')">福缘丹 +10</button>
+          </view>
+        </view>
+
+        <view class="debug-section">
+          <text class="debug-section-title">道具</text>
+          <view class="debug-btns">
+            <button class="secondary-btn small-btn" @click="debugAdd('exploreTalisman')">探索符 +10</button>
+            <button class="secondary-btn small-btn" @click="debugAdd('acceleratorCharm')">加速符 +10</button>
+            <button class="secondary-btn small-btn" @click="debugAdd('escapeTalisman')">遁走符 +10</button>
+          </view>
+        </view>
+
+        <view class="debug-section">
+          <text class="debug-section-title">材料</text>
+          <view class="debug-btns">
+            <button class="secondary-btn small-btn" @click="debugAdd('herbs')">药材 +100</button>
+            <button class="secondary-btn small-btn" @click="debugAdd('ores')">矿石 +100</button>
+            <button class="secondary-btn small-btn" @click="debugAdd('fruits')">灵果 +100</button>
+            <button class="secondary-btn small-btn" @click="debugAdd('cores')">内丹 +100</button>
+            <button class="secondary-btn small-btn" @click="debugAdd('scrolls')">残卷 +100</button>
+            <button class="secondary-btn small-btn" @click="debugAdd('furnaceStones')">炉石 +50</button>
+          </view>
+        </view>
+
+        <view class="debug-section">
+          <text class="debug-section-title">其他</text>
+          <view class="debug-btns">
+            <button class="secondary-btn small-btn" @click="debugAdd('exploreTimes')">探索次数 +10</button>
+            <button class="secondary-btn small-btn" @click="debugFullHeal">满血满灵</button>
+            <button class="danger-btn small-btn" @click="debugMaxAll">一键拉满</button>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useGame } from '@/common/game/useGame.js'
 const {
   syncCurrentPageType,
@@ -558,6 +669,142 @@ function equipAndUpgradeSkill(skill) {
 
 const cultivationView = ref('overview')
 
+// ===== 开发调试工具 =====
+const DEBUG_PASSWORD = 'X9k#7mP$2wQ@5vL'
+const debugVisible = ref(false)
+const debugAuthed = ref(false)
+const debugPwd = ref('')
+const debugPwdError = ref(false)
+const debugAmounts = reactive({
+  cultivation: 1000000,
+  hp: 500,
+  spirit: 500,
+  spiritStones: 10000,
+  jade: 10,
+  techniquePoints: 50,
+  breakthroughPills: 10
+})
+
+function openDebug() {
+  debugVisible.value = true
+  debugPwd.value = ''
+  debugPwdError.value = false
+}
+
+function closeDebugMask() {
+  debugVisible.value = false
+}
+
+function checkDebugPwd() {
+  if (debugPwd.value === DEBUG_PASSWORD) {
+    debugAuthed.value = true
+    debugPwdError.value = false
+  } else {
+    debugPwdError.value = true
+  }
+}
+
+function debugAdd(type) {
+  const amt = Number(debugAmounts[type]) || 0
+  if (type === 'cultivation') { player.cultivation += amt }
+  else if (type === 'hp') { player.hp = Math.min(battleMaxHp.value, player.hp + amt) }
+  else if (type === 'spirit') { player.spirit = Math.min(player.maxSpirit, player.spirit + amt) }
+  else if (type === 'spiritStones') { inventory.spiritStones += amt }
+  else if (type === 'jade') { inventory.jade = (inventory.jade || 0) + amt }
+  else if (type === 'techniquePoints') { player.techniquePoints += amt }
+  else if (type === 'breakthroughPills') { player.breakthroughPills += amt }
+  else if (type === 'bonePill') { inventory.pills.bone += 10 }
+  else if (type === 'comprehensionPill') { inventory.pills.comprehension += 10 }
+  else if (type === 'fortunePill') { inventory.pills.fortune += 10 }
+  else if (type === 'exploreTalisman') { inventory.items.exploreTalisman += 10 }
+  else if (type === 'acceleratorCharm') { inventory.items.acceleratorCharm += 10 }
+  else if (type === 'escapeTalisman') { inventory.items.escapeTalisman += 10 }
+  else if (type === 'exploreTimes') { player.explorationTimes = Math.min(player.maxExplorationTimes + 10, player.explorationTimes + 10) }
+  else if (type === 'herbs') { inventory.herbs += 100 }
+  else if (type === 'ores') { inventory.ores += 100 }
+  else if (type === 'fruits') { inventory.fruits += 100 }
+  else if (type === 'cores') { inventory.cores += 100 }
+  else if (type === 'scrolls') { inventory.scrolls += 100 }
+  else if (type === 'furnaceStones') { inventory.furnaceStones += 50 }
+  saveSilently()
+  showFeedback('已增加', 'success')
+}
+
+function debugAddLayer() {
+  if (player.realmLayer >= 9) {
+    if (player.realmIndex >= realmNames.length - 1) { showFeedback('已达最高境界'); return }
+    player.realmIndex += 1
+    player.realmLayer = 1
+  } else {
+    player.realmLayer += 1
+  }
+  player.maxSpirit += 15 + player.realmIndex * 5
+  player.spirit = player.maxSpirit
+  player.hp = battleMaxHp.value
+  saveSilently()
+  showFeedback(`已升至${currentRealmName.value} ${player.realmLayer}层`, 'success')
+}
+
+function debugAddRealm() {
+  if (player.realmIndex >= realmNames.length - 1) { showFeedback('已达最高境界'); return }
+  player.realmIndex += 1
+  player.realmLayer = 1
+  player.maxSpirit += 15 + player.realmIndex * 5
+  player.spirit = player.maxSpirit
+  player.hp = battleMaxHp.value
+  saveSilently()
+  showFeedback(`已升至${currentRealmName.value}`, 'success')
+}
+
+function debugSetRealm(index) {
+  player.realmIndex = Math.min(realmNames.length - 1, index)
+  player.realmLayer = 1
+  player.maxSpirit = 120 + player.realmIndex * 20
+  player.spirit = player.maxSpirit
+  player.hp = battleMaxHp.value
+  saveSilently()
+  showFeedback(`已设置${currentRealmName.value}`, 'success')
+}
+
+function debugGivePill(key) {
+  inventory.pills[key] = (inventory.pills[key] || 0) + 10
+  saveSilently()
+  showFeedback('丹药 +10', 'success')
+}
+
+function debugFullHeal() {
+  player.hp = battleMaxHp.value
+  player.spirit = player.maxSpirit
+  saveSilently()
+  showFeedback('已满血满灵', 'success')
+}
+
+function debugMaxAll() {
+  player.cultivation += 99999999999
+  player.hp = battleMaxHp.value
+  player.spirit = player.maxSpirit
+  player.techniquePoints += 99999
+  player.breakthroughPills += 999
+  player.explorationTimes = Math.max(player.explorationTimes, 100)
+  inventory.spiritStones += 999999
+  inventory.jade = (inventory.jade || 0) + 999
+  inventory.herbs += 9999
+  inventory.ores += 9999
+  inventory.fruits += 9999
+  inventory.cores += 9999
+  inventory.scrolls += 999
+  inventory.furnaceStones += 999
+  inventory.items.exploreTalisman += 99
+  inventory.items.acceleratorCharm += 99
+  inventory.items.escapeTalisman += 99
+  cultivationPillDefs.forEach(p => { inventory.pills[p.key] = (inventory.pills[p.key] || 0) + 99 })
+  inventory.pills.bone += 99
+  inventory.pills.comprehension += 99
+  inventory.pills.fortune += 99
+  saveSilently()
+  showFeedback('一键拉满完成', 'success')
+}
+
 
 function handleAutoBreakthroughChange(event) {
   const values = event?.detail?.value || []
@@ -571,4 +818,93 @@ function switchCultivationView(view) {
 
 <style scoped lang="scss">
 @import '@/common/styles/game.scss';
+
+// 调试面板
+.debug-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.debug-panel {
+  width: 90vw;
+  max-width: 640rpx;
+  max-height: 85vh;
+  padding: 24rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.debug-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+.debug-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #f0c66b;
+}
+.debug-auth {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32rpx 0;
+}
+.debug-pwd-input {
+  width: 60%;
+  height: 72rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.2);
+  border-radius: 8rpx;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  text-align: center;
+  font-size: 28rpx;
+}
+.debug-scroll {
+  flex: 1;
+  max-height: 65vh;
+}
+.debug-section {
+  margin-bottom: 24rpx;
+}
+.debug-section-title {
+  display: block;
+  color: #f0c66b;
+  font-size: 26rpx;
+  font-weight: 700;
+  margin-bottom: 12rpx;
+  border-bottom: 2rpx solid rgba(240, 198, 107, 0.3);
+  padding-bottom: 8rpx;
+}
+.debug-row {
+  margin-bottom: 12rpx;
+}
+.debug-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+.debug-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+.debug-num-input {
+  width: 140rpx;
+  height: 56rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.2);
+  border-radius: 8rpx;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  text-align: center;
+  font-size: 24rpx;
+}
+.mb-12 { margin-bottom: 12rpx; }
+.mt-12 { margin-top: 12rpx; }
 </style>
