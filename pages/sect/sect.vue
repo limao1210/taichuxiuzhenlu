@@ -65,7 +65,7 @@
 
           <view class="info-box" v-if="canCreateSect">
             <text class="section-mini-title">创建宗门</text>
-            <text class="small-text" v-if="getSectCreateMaterials">所需材料：灵石 {{ getSectCreateMaterials.spiritStones }}、矿石 {{ getSectCreateMaterials.ores }}、药材 {{ getSectCreateMaterials.herbs }}</text>
+            <text class="small-text" v-if="getSectCreateMaterials">所需材料：灵石 {{ formatNumber(getSectCreateMaterials.spiritStones || 0) }}、矿石 {{ formatNumber(getSectCreateMaterials.ores || 0) }}、药材 {{ formatNumber(getSectCreateMaterials.herbs || 0) }}</text>
             <input v-model="sect.createName" class="name-input" placeholder-class="input-placeholder" maxlength="12" placeholder="请输入宗门名称" />
             <view class="action-row mt-12">
               <button class="primary-btn" @click="createSect">创建宗门</button>
@@ -82,7 +82,7 @@
                 </view>
               </view>
               <view class="recipe-meta">
-                <text>贡献 {{ cs.contribution }} · 资金 {{ cs.funds }}</text>
+                <text>贡献 {{ formatNumber(cs.contribution) }} · 资金 {{ formatNumber(cs.funds) }}</text>
               </view>
               <view class="action-row mt-12">
                 <button class="primary-btn small-btn" @click="rejoinSect(cs.id)">重返宗门</button>
@@ -107,11 +107,11 @@
             </view>
             <view class="stat-item">
               <text class="stat-label">宗门贡献</text>
-              <text class="stat-value">{{ sect.contribution }}</text>
+              <text class="stat-value">{{ formatNumber(sect.contribution) }}</text>
             </view>
             <view class="stat-item">
               <text class="stat-label">宗门资金</text>
-              <text class="stat-value">{{ sect.funds }}</text>
+              <text class="stat-value">{{ formatNumber(sect.funds) }}</text>
             </view>
           </view>
 
@@ -287,7 +287,7 @@
               <text class="recipe-name">{{ item.name }}</text>
               <text class="recipe-desc">{{ item.desc }}</text>
             </view>
-            <view class="small-badge">{{ item.cost }} 贡献</view>
+            <view class="small-badge">{{ formatNumber(item.cost) }} 贡献</view>
           </view>
           <view class="action-row mt-12">
             <button class="primary-btn small-btn" :disabled="sect.contribution < item.cost" @click="exchangeSectItem(item.id)">

@@ -43,7 +43,7 @@
           </view>
           <view class="stat-item">
             <text class="stat-label">炉石储备</text>
-            <text class="stat-value">{{ inventory.furnaceStones }}</text>
+            <text class="stat-value">{{ formatNumber(inventory.furnaceStones) }}</text>
           </view>
           <view class="stat-item">
             <text class="stat-label">宗门加持</text>
@@ -57,7 +57,7 @@
         </view>
 
         <view class="info-box">
-          <text class="small-text">升级条件：矿石 {{ nextFurnaceNeed.ores }}、灵石 {{ nextFurnaceNeed.stones }}、炉石 {{ nextFurnaceNeed.furnaceStones }}</text>
+          <text class="small-text">升级条件：矿石 {{ formatNumber(nextFurnaceNeed.ores) }}、灵石 {{ formatNumber(nextFurnaceNeed.stones) }}、炉石 {{ formatNumber(nextFurnaceNeed.furnaceStones) }}</text>
           <text class="small-text">金丹期后可批量炼丹，当前批量上限 {{ maxBatchCount }}。</text>
           <text class="small-text">最近结果：{{ alchemy.lastResult }}</text>
         </view>

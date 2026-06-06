@@ -145,10 +145,13 @@
                 <text class="recipe-name">{{ skill.name }}</text>
                 <text class="recipe-desc">{{ skill.desc }}</text>
               </view>
-              <view class="small-badge">Lv.{{ getBattleSkillLevel(skill) }} · 灵力 {{ getBattleSkillCost(skill) }}</view>
+              <view class="small-badge">Lv.{{ getBattleSkillLevel(skill) }} · 灵力 {{ formatNumber(getBattleSkillCost(skill)) }}</view>
             </view>
             <view class="recipe-meta">
-              <text>伤害倍率 ×{{ getBattleSkillPowerText(skill) }}，升级需功法点 {{ getBattleSkillUpgradeNeed(skill) }}，{{ skill.healRate ? '带有生命回复效果' : '无额外回复' }}</text>
+              <text>
+                <template v-if="skill.category === 'dodge'">主动闪避，成功率等同逃跑判定（战力差+装备+低血），升级需功法点 {{ formatNumber(getBattleSkillUpgradeNeed(skill)) }}</template>
+                <template v-else>伤害倍率 ×{{ getBattleSkillPowerText(skill) }}，升级需功法点 {{ formatNumber(getBattleSkillUpgradeNeed(skill)) }}，{{ skill.healRate ? '带有生命回复效果' : '无额外回复' }}</template>
+              </text>
             </view>
           </view>
         </view>

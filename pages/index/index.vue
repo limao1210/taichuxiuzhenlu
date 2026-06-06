@@ -81,19 +81,19 @@
           </view>
           <view class="stat-item">
             <text class="stat-label">根骨</text>
-            <text class="stat-value">{{ actualBone }} / {{ getAttributeMax() }}</text>
+            <text class="stat-value">{{ player.bone }}{{ equipmentBonus.bone > 0 ? ' +' + equipmentBonus.bone : '' }} / {{ getAttributeMax() }}</text>
           </view>
           <view class="stat-item">
             <text class="stat-label">悟性</text>
-            <text class="stat-value">{{ actualComprehension }} / {{ getAttributeMax() }}</text>
+            <text class="stat-value">{{ player.comprehension }}{{ equipmentBonus.comprehension > 0 ? ' +' + equipmentBonus.comprehension : '' }} / {{ getAttributeMax() }}</text>
           </view>
           <view class="stat-item">
             <text class="stat-label">福缘</text>
-            <text class="stat-value">{{ actualFortune }} / {{ getAttributeMax() }}</text>
+            <text class="stat-value">{{ player.fortune }}{{ equipmentBonus.fortune > 0 ? ' +' + equipmentBonus.fortune : '' }} / {{ getAttributeMax() }}</text>
           </view>
           <view class="stat-item">
             <text class="stat-label">功法点</text>
-            <text class="stat-value">{{ player.techniquePoints }}</text>
+            <text class="stat-value">{{ formatNumber(player.techniquePoints) }}</text>
           </view>
           <view class="stat-item">
             <text class="stat-label">探索次数</text>
@@ -150,7 +150,7 @@
         <view class="info-box">
           <text class="small-text">自动战斗会按原逻辑播放完整过程；手动战斗中，每回合由玩家选择技能，灵力不足时高阶技能不可释放。</text>
           <text class="small-text">当前生命 {{ formatNumber(player.hp) }} / {{ formatNumber(battleMaxHp) }}，灵力 {{ formatNumber(player.spirit) }} / {{ formatNumber(player.maxSpirit) }}；战斗结束后生命与灵力都会回满。</text>
-          <text class="small-text">功法点：{{ player.techniquePoints }}。最多携带 4 个主动功法，灵剑斩常驻可用不占槽位。</text>
+          <text class="small-text">功法点：{{ formatNumber(player.techniquePoints) }}。最多携带 4 个主动功法，灵剑斩常驻可用不占槽位。</text>
         </view>
 
         <view class="action-row">
@@ -167,6 +167,13 @@
             <view class="small-badge">常驻 · Lv.{{ getBattleSkillLevel({id:'basic'}) }}</view>
           </view>
           <button class="secondary-btn small-btn" :disabled="player.techniquePoints < getBattleSkillUpgradeNeed({id:'basic'}) || getBattleSkillLevel({id:'basic'}) >= getBattleSkillMaxLevel({id:'basic'})" @click="upgradeBattleSkill('basic')" style="margin-top:10rpx">{{ getBattleSkillLevel({id:'basic'}) >= getBattleSkillMaxLevel({id:'basic'}) ? '已达上限 Lv.' + getBattleSkillMaxLevel({id:'basic'}) : (player.techniquePoints >= getBattleSkillUpgradeNeed({id:'basic'}) ? '升级灵剑斩' : '功法点不足') }}</button>
+        </view>
+        <view v-if="player.realmIndex >= 2" class="skill-card dodge-skill-card">
+          <view class="recipe-head">
+            <view><text class="recipe-name">影遁术</text><text class="recipe-desc">凝神化影，主动闪避下一击。</text></view>
+            <view class="small-badge">闪避 · Lv.{{ getBattleSkillLevel({id:'shadowDodge'}) }} · {{ Math.floor(Math.min(15, getBattleSkillLevel({id:'shadowDodge'}) * 1.5)) }}%</view>
+          </view>
+          <button class="secondary-btn small-btn" :disabled="player.techniquePoints < getBattleSkillUpgradeNeed({id:'shadowDodge'}) || getBattleSkillLevel({id:'shadowDodge'}) >= getBattleSkillMaxLevel({id:'shadowDodge'})" @click="upgradeBattleSkill('shadowDodge')" style="margin-top:10rpx">{{ getBattleSkillLevel({id:'shadowDodge'}) >= getBattleSkillMaxLevel({id:'shadowDodge'}) ? '满级 Lv.' + getBattleSkillMaxLevel({id:'shadowDodge'}) : (player.techniquePoints >= getBattleSkillUpgradeNeed({id:'shadowDodge'}) ? '升级影遁术' : '功法点不足') }}</button>
         </view>
         <view v-for="skill in equippedBattleSkills" :key="'eq-'+skill.id" class="skill-card">
           <view class="recipe-head">
@@ -192,10 +199,18 @@
             </view>
             <view class="small-badge">{{ getSkillCategoryText(skill) }} · Lv.{{ getBattleSkillLevel(skill) }} · 灵力 {{ getBattleSkillCost(skill) }}</view>
           </view>
-          <text class="small-text">倍率 ×{{ getBattleSkillPowerText(skill) }}，升级需 {{ getBattleSkillUpgradeNeed(skill) }} 功法点</text>
+          <text v-if="skill.category === 'dodge'" class="small-text">闪避率 Lv.×1.5%（当前 {{ Math.min(15, getBattleSkillLevel(skill) * 1.5) }}%），升级需 {{ formatNumber(getBattleSkillUpgradeNeed(skill)) }} 功法点</text>
+          <text v-else class="small-text">倍率 ×{{ getBattleSkillPowerText(skill) }}，升级需 {{ formatNumber(getBattleSkillUpgradeNeed(skill)) }} 功法点</text>
           <view class="action-row mt-12">
-            <button class="primary-btn small-btn" :disabled="player.battleLoadout.length >= 4 || player.techniquePoints < getBattleSkillUpgradeNeed(skill) || getBattleSkillLevel(skill) >= getBattleSkillMaxLevel(skill)" @click="equipAndUpgradeSkill(skill)">{{ player.battleLoadout.length >= 4 ? '槽位已满' : (player.techniquePoints >= getBattleSkillUpgradeNeed(skill) && getBattleSkillLevel(skill) < getBattleSkillMaxLevel(skill) ? '装备并升级' : '装备') }}</button>
-            <button v-if="player.techniquePoints >= getBattleSkillUpgradeNeed(skill) && getBattleSkillLevel(skill) < getBattleSkillMaxLevel(skill)" class="secondary-btn small-btn" @click="upgradeBattleSkill(skill.id)">仅升级</button>
+            <template v-if="skill.category === 'dodge'">
+              <button class="primary-btn small-btn" :disabled="getBattleSkillLevel(skill) >= getBattleSkillMaxLevel(skill) || player.techniquePoints < getBattleSkillUpgradeNeed(skill)" @click="upgradeBattleSkill(skill.id)">
+                {{ getBattleSkillLevel(skill) >= getBattleSkillMaxLevel(skill) ? '满级 Lv.' + getBattleSkillMaxLevel(skill) : (player.techniquePoints >= getBattleSkillUpgradeNeed(skill) ? '升级' : '功法点不足') }}
+              </button>
+            </template>
+            <template v-else>
+              <button class="primary-btn small-btn" :disabled="player.battleLoadout.length >= 4 || player.techniquePoints < getBattleSkillUpgradeNeed(skill) || getBattleSkillLevel(skill) >= getBattleSkillMaxLevel(skill)" @click="equipAndUpgradeSkill(skill)">{{ player.battleLoadout.length >= 4 ? '槽位已满' : (player.techniquePoints >= getBattleSkillUpgradeNeed(skill) && getBattleSkillLevel(skill) < getBattleSkillMaxLevel(skill) ? '装备并升级' : '装备') }}</button>
+              <button v-if="player.techniquePoints >= getBattleSkillUpgradeNeed(skill) && getBattleSkillLevel(skill) < getBattleSkillMaxLevel(skill)" class="secondary-btn small-btn" @click="upgradeBattleSkill(skill.id)">仅升级</button>
+            </template>
           </view>
         </view>
       </view>
@@ -655,7 +670,7 @@ const unequippedBattleSkills = computed(() => {
 })
 
 function getSkillCategoryText(skill) {
-  const map = { attack: '攻击', buff: '增益', heal: '恢复' }
+  const map = { attack: '攻击', buff: '增益', heal: '恢复', dodge: '闪避' }
   return map[skill.category] || '攻击'
 }
 

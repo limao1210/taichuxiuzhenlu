@@ -30,7 +30,7 @@
           <view class="small-badge">资源管理</view>
         </view>
         <view class="info-box compact-box">
-          <text class="small-text">当前功法点：{{ player.techniquePoints }}。功法点可用于升级功法、战斗技能和温养神器。</text>
+          <text class="small-text">当前功法点：{{ formatNumber(player.techniquePoints) }}。功法点可用于升级功法、战斗技能和温养神器。</text>
         </view>
 
         <view v-if="inventoryTab === 'pills'" class="section-card-inner">
@@ -85,8 +85,8 @@
 
           <scroll-view scroll-x class="equipment-filter-scroll">
             <view class="equipment-filter-row card">
-              <button class="inner-nav-btn" :class="equipmentView === 'weapon' ? 'active' : ''" @click="switchEquipmentView('weapon')">武器</button>
               <button class="inner-nav-btn" :class="equipmentView === 'artifact' ? 'active' : ''" @click="switchEquipmentView('artifact')">神器</button>
+              <button class="inner-nav-btn" :class="equipmentView === 'weapon' ? 'active' : ''" @click="switchEquipmentView('weapon')">武器</button>
               <button class="inner-nav-btn" :class="equipmentView === 'armor' ? 'active' : ''" @click="switchEquipmentView('armor')">护具</button>
               <button class="inner-nav-btn" :class="equipmentView === 'accessory' ? 'active' : ''" @click="switchEquipmentView('accessory')">饰品</button>
               <button class="inner-nav-btn" :class="equipmentView === 'talisman' ? 'active' : ''" @click="switchEquipmentView('talisman')">符佩</button>

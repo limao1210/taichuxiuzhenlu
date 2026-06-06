@@ -32,7 +32,7 @@
             <text>{{ formatNumber(battle.playerSpirit || player.spirit) }} / {{ formatNumber(battle.playerMaxSpirit || player.maxSpirit) }}</text>
           </view>
           <view class="mini-progress"><view class="mini-progress-inner spirit" :style="{ width: getBattlePercent(battle.playerSpirit || player.spirit, battle.playerMaxSpirit || player.maxSpirit) + '%' }"></view></view>
-          <text class="small-text mt-12">攻 {{ battleAttack }} / 防 {{ battleDefense }}</text>
+          <text class="small-text mt-12">攻 {{ formatNumber(battleAttack) }} / 防 {{ formatNumber(battleDefense) }}</text>
         </view>
 
         <view class="battle-vs-word">VS</view>
@@ -63,7 +63,8 @@
                 <view class="small-badge manual-skill-cost">Lv.{{ getBattleSkillLevel(skill) }} · 灵力 {{ getBattleSkillCost(skill) }}</view>
               </view>
               <text class="recipe-desc manual-skill-desc">{{ skill.desc }}</text>
-              <text class="small-text manual-skill-meta">倍率 ×{{ getBattleSkillPowerText(skill) }} · {{ player.spirit >= getBattleSkillCost(skill) ? '可释放' : '灵力不足' }}</text>
+              <text v-if="skill.category === 'dodge'" class="small-text manual-skill-meta">闪避率 {{ Math.floor(Math.min(15, getBattleSkillLevel(skill) * 1.5)) }}% · {{ player.spirit >= getBattleSkillCost(skill) ? '可释放' : '灵力不足' }}</text>
+              <text v-else class="small-text manual-skill-meta">倍率 ×{{ getBattleSkillPowerText(skill) }} · {{ player.spirit >= getBattleSkillCost(skill) ? '可释放' : '灵力不足' }}</text>
             </view>
             <button class="primary-btn small-btn manual-skill-btn" :disabled="!battle.waitingForPlayer || player.spirit < getBattleSkillCost(skill)" @click="useManualBattleSkill(skill.id)">施展</button>
           </view>

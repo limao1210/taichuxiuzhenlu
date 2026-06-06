@@ -91,7 +91,8 @@ export function useGame(currentPageType = 'cultivation') {
     { id: 'windWalk', category: 'buff', name: '风灵步', desc: '身法如风，回复灵力并提升闪避。', cost: 10, spiritCostRate: 0.05, buffDodge: 0.25, buffTurns: 2, spiritRecover: 0.12, unlockRealm: 3 },
     { id: 'swordShield', category: 'heal', name: '护体剑罡', desc: '剑气护体，造成伤害并恢复生命。', cost: 18, spiritCostRate: 0.10, power: 1.20, healRate: 0.12, unlockRealm: 1 },
     { id: 'springHeal', category: 'heal', name: '回春术', desc: '木灵生机，恢复大量生命。', cost: 22, spiritCostRate: 0.12, healRate: 0.32, unlockRealm: 2 },
-    { id: 'soulDrain', category: 'heal', name: '噬灵术', desc: '吸取敌方灵力与生命。', cost: 18, spiritCostRate: 0.10, power: 1.25, healRate: 0.14, spiritDrain: 0.07, unlockRealm: 3 }
+    { id: 'soulDrain', category: 'heal', name: '噬灵术', desc: '吸取敌方灵力与生命。', cost: 18, spiritCostRate: 0.10, power: 1.25, healRate: 0.14, spiritDrain: 0.07, unlockRealm: 3 },
+    { id: 'shadowDodge', category: 'dodge', name: '影遁术', desc: '凝神化影，主动闪避下一击，成功率等同逃跑率。', cost: 15, spiritCostRate: 0.08, unlockRealm: 2 }
   ]
 
   const cultivationPillDefs = [
@@ -214,159 +215,159 @@ export function useGame(currentPageType = 'cultivation') {
     { id: 'heavenFateToken', type: 'talisman', unlockRealm: 8, name: '天命令', desc: '令中封有一线天命，渡劫前尤为珍贵。', effectText: '福缘 +5，突破 +7%，探索 +4%', bonus: { fortune: 5, breakthrough: 7, explore: 0.04 } }
   ]
 
-  const generatedEquipmentCatalog = [
-    { id: 'r0_weapon_1', type: 'weapon', unlockRealm: 0, name: '炼气寒铁剑', desc: '攻伐稳健的标准灵兵，适合炼气境界使用。', effectText: '攻击 +18', bonus: { attack: 18, manual: 0.03 } },
-    { id: 'r0_weapon_2', type: 'weapon', unlockRealm: 0, name: '炼气破岳枪', desc: '势大力沉，适合正面压制，适合炼气境界使用。', effectText: '攻击 +21，根骨 +1', bonus: { attack: 21, bone: 1 } },
-    { id: 'r0_weapon_3', type: 'weapon', unlockRealm: 0, name: '炼气流光刃', desc: '出手迅疾，适合抢占先机，适合炼气境界使用。', effectText: '攻击 +24，悟性 +1', bonus: { attack: 24, comprehension: 1 } },
-    { id: 'r0_armor_1', type: 'armor', unlockRealm: 0, name: '炼气玄纹甲', desc: '护住经脉与气海，适合炼气境界使用。', effectText: '生命 +83，防御 +14', bonus: { hp: 83, defense: 14, bone: 1 } },
-    { id: 'r0_armor_2', type: 'armor', unlockRealm: 0, name: '炼气云纹袍', desc: '轻灵护体，久战不疲，适合炼气境界使用。', effectText: '生命 +96，防御 +16', bonus: { hp: 96, defense: 16, auto: 0.025 } },
-    { id: 'r0_armor_3', type: 'armor', unlockRealm: 0, name: '炼气镇岳铠', desc: '厚重坚实，适合硬抗强敌，适合炼气境界使用。', effectText: '生命 +109，防御 +19，突破 +2% ', bonus: { hp: 109, defense: 19, breakthrough: 2 } },
-    { id: 'r0_accessory_1', type: 'accessory', unlockRealm: 0, name: '炼气凝元佩', desc: '温养道基，增强修行底蕴，适合炼气境界使用。', effectText: '生命 +38', bonus: { hp: 38, bone: 1, auto: 0.025 } },
-    { id: 'r0_accessory_2', type: 'accessory', unlockRealm: 0, name: '炼气明窍戒', desc: '清明灵台，提高悟性，适合炼气境界使用。', effectText: '生命 +44，攻击 +8', bonus: { hp: 44, comprehension: 1, attack: 8 } },
-    { id: 'r0_accessory_3', type: 'accessory', unlockRealm: 0, name: '炼气天缘珠', desc: '牵引机缘，提高福缘，适合炼气境界使用。', effectText: '生命 +51', bonus: { hp: 51, fortune: 1, explore: 0.025 } },
-    { id: 'r0_talisman_1', type: 'talisman', unlockRealm: 0, name: '炼气御灵符', desc: '辅助吐纳，提升修炼效率，适合炼气境界使用。', effectText: '防御 +7', bonus: { defense: 7, auto: 0.035 } },
-    { id: 'r0_talisman_2', type: 'talisman', unlockRealm: 0, name: '炼气破障令', desc: '稳固心神，提高破境成功率，适合炼气境界使用。', effectText: '防御 +8', bonus: { defense: 8, breakthrough: 2, comprehension: 1 } },
-    { id: 'r0_talisman_3', type: 'talisman', unlockRealm: 0, name: '炼气寻宝印', desc: '感应灵机，提升探索收益，适合炼气境界使用。', effectText: '防御 +9，攻击 +11', bonus: { defense: 9, explore: 0.035, attack: 11 } },
-    { id: 'r1_weapon_1', type: 'weapon', unlockRealm: 1, name: '筑基寒铁剑', desc: '攻伐稳健的标准灵兵，适合筑基境界使用。', effectText: '攻击 +41', bonus: { attack: 41, manual: 0.033 } },
-    { id: 'r1_weapon_2', type: 'weapon', unlockRealm: 1, name: '筑基破岳枪', desc: '势大力沉，适合正面压制，适合筑基境界使用。', effectText: '攻击 +47，根骨 +1', bonus: { attack: 47, bone: 1 } },
-    { id: 'r1_weapon_3', type: 'weapon', unlockRealm: 1, name: '筑基流光刃', desc: '出手迅疾，适合抢占先机，适合筑基境界使用。', effectText: '攻击 +54，悟性 +1', bonus: { attack: 54, comprehension: 1 } },
-    { id: 'r1_armor_1', type: 'armor', unlockRealm: 1, name: '筑基玄纹甲', desc: '护住经脉与气海，适合筑基境界使用。', effectText: '生命 +186，防御 +32', bonus: { hp: 186, defense: 32, bone: 1 } },
-    { id: 'r1_armor_2', type: 'armor', unlockRealm: 1, name: '筑基云纹袍', desc: '轻灵护体，久战不疲，适合筑基境界使用。', effectText: '生命 +216，防御 +37', bonus: { hp: 216, defense: 37, auto: 0.027 } },
-    { id: 'r1_armor_3', type: 'armor', unlockRealm: 1, name: '筑基镇岳铠', desc: '厚重坚实，适合硬抗强敌，适合筑基境界使用。', effectText: '生命 +245，防御 +42，突破 +2% ', bonus: { hp: 245, defense: 42, breakthrough: 2 } },
-    { id: 'r1_accessory_1', type: 'accessory', unlockRealm: 1, name: '筑基凝元佩', desc: '温养道基，增强修行底蕴，适合筑基境界使用。', effectText: '生命 +86', bonus: { hp: 86, bone: 1, auto: 0.027 } },
-    { id: 'r1_accessory_2', type: 'accessory', unlockRealm: 1, name: '筑基明窍戒', desc: '清明灵台，提高悟性，适合筑基境界使用。', effectText: '生命 +100，攻击 +18', bonus: { hp: 100, comprehension: 1, attack: 18 } },
-    { id: 'r1_accessory_3', type: 'accessory', unlockRealm: 1, name: '筑基天缘珠', desc: '牵引机缘，提高福缘，适合筑基境界使用。', effectText: '生命 +114', bonus: { hp: 114, fortune: 1, explore: 0.027 } },
-    { id: 'r1_talisman_1', type: 'talisman', unlockRealm: 1, name: '筑基御灵符', desc: '辅助吐纳，提升修炼效率，适合筑基境界使用。', effectText: '防御 +16', bonus: { defense: 16, auto: 0.037 } },
-    { id: 'r1_talisman_2', type: 'talisman', unlockRealm: 1, name: '筑基破障令', desc: '稳固心神，提高破境成功率，适合筑基境界使用。', effectText: '防御 +18', bonus: { defense: 18, breakthrough: 2, comprehension: 1 } },
-    { id: 'r1_talisman_3', type: 'talisman', unlockRealm: 1, name: '筑基寻宝印', desc: '感应灵机，提升探索收益，适合筑基境界使用。', effectText: '防御 +21，攻击 +24', bonus: { defense: 21, explore: 0.037, attack: 24 } },
-    { id: 'r2_weapon_1', type: 'weapon', unlockRealm: 2, name: '金丹寒铁剑', desc: '攻伐稳健的标准灵兵，适合金丹境界使用。', effectText: '攻击 +91', bonus: { attack: 91, manual: 0.036 } },
-    { id: 'r2_weapon_2', type: 'weapon', unlockRealm: 2, name: '金丹破岳枪', desc: '势大力沉，适合正面压制，适合金丹境界使用。', effectText: '攻击 +105，根骨 +1', bonus: { attack: 105, bone: 1 } },
-    { id: 'r2_weapon_3', type: 'weapon', unlockRealm: 2, name: '金丹流光刃', desc: '出手迅疾，适合抢占先机，适合金丹境界使用。', effectText: '攻击 +120，悟性 +1', bonus: { attack: 120, comprehension: 1 } },
-    { id: 'r2_armor_1', type: 'armor', unlockRealm: 2, name: '金丹玄纹甲', desc: '护住经脉与气海，适合金丹境界使用。', effectText: '生命 +414，防御 +71', bonus: { hp: 414, defense: 71, bone: 1 } },
-    { id: 'r2_armor_2', type: 'armor', unlockRealm: 2, name: '金丹云纹袍', desc: '轻灵护体，久战不疲，适合金丹境界使用。', effectText: '生命 +480，防御 +82', bonus: { hp: 480, defense: 82, auto: 0.029 } },
-    { id: 'r2_armor_3', type: 'armor', unlockRealm: 2, name: '金丹镇岳铠', desc: '厚重坚实，适合硬抗强敌，适合金丹境界使用。', effectText: '生命 +545，防御 +93，突破 +3% ', bonus: { hp: 545, defense: 93, breakthrough: 3 } },
-    { id: 'r2_accessory_1', type: 'accessory', unlockRealm: 2, name: '金丹凝元佩', desc: '温养道基，增强修行底蕴，适合金丹境界使用。', effectText: '生命 +192', bonus: { hp: 192, bone: 1, auto: 0.029 } },
-    { id: 'r2_accessory_2', type: 'accessory', unlockRealm: 2, name: '金丹明窍戒', desc: '清明灵台，提高悟性，适合金丹境界使用。', effectText: '生命 +222，攻击 +41', bonus: { hp: 222, comprehension: 1, attack: 41 } },
-    { id: 'r2_accessory_3', type: 'accessory', unlockRealm: 2, name: '金丹天缘珠', desc: '牵引机缘，提高福缘，适合金丹境界使用。', effectText: '生命 +253', bonus: { hp: 253, fortune: 1, explore: 0.029 } },
-    { id: 'r2_talisman_1', type: 'talisman', unlockRealm: 2, name: '金丹御灵符', desc: '辅助吐纳，提升修炼效率，适合金丹境界使用。', effectText: '防御 +35', bonus: { defense: 35, auto: 0.039 } },
-    { id: 'r2_talisman_2', type: 'talisman', unlockRealm: 2, name: '金丹破障令', desc: '稳固心神，提高破境成功率，适合金丹境界使用。', effectText: '防御 +41', bonus: { defense: 41, breakthrough: 3, comprehension: 1 } },
-    { id: 'r2_talisman_3', type: 'talisman', unlockRealm: 2, name: '金丹寻宝印', desc: '感应灵机，提升探索收益，适合金丹境界使用。', effectText: '防御 +47，攻击 +53', bonus: { defense: 47, explore: 0.039, attack: 53 } },
-    { id: 'r3_weapon_1', type: 'weapon', unlockRealm: 3, name: '元婴寒铁剑', desc: '攻伐稳健的标准灵兵，适合元婴境界使用。', effectText: '攻击 +209', bonus: { attack: 209, manual: 0.039 } },
-    { id: 'r3_weapon_2', type: 'weapon', unlockRealm: 3, name: '元婴破岳枪', desc: '势大力沉，适合正面压制，适合元婴境界使用。', effectText: '攻击 +242，根骨 +2', bonus: { attack: 242, bone: 2 } },
-    { id: 'r3_weapon_3', type: 'weapon', unlockRealm: 3, name: '元婴流光刃', desc: '出手迅疾，适合抢占先机，适合元婴境界使用。', effectText: '攻击 +275，悟性 +1', bonus: { attack: 275, comprehension: 1 } },
-    { id: 'r3_armor_1', type: 'armor', unlockRealm: 3, name: '元婴玄纹甲', desc: '护住经脉与气海，适合元婴境界使用。', effectText: '生命 +952，防御 +163', bonus: { hp: 952, defense: 163, bone: 2 } },
-    { id: 'r3_armor_2', type: 'armor', unlockRealm: 3, name: '元婴云纹袍', desc: '轻灵护体，久战不疲，适合元婴境界使用。', effectText: '生命 +1103，防御 +188', bonus: { hp: 1103, defense: 188, auto: 0.031 } },
-    { id: 'r3_armor_3', type: 'armor', unlockRealm: 3, name: '元婴镇岳铠', desc: '厚重坚实，适合硬抗强敌，适合元婴境界使用。', effectText: '生命 +1254，防御 +214，突破 +3% ', bonus: { hp: 1254, defense: 214, breakthrough: 3 } },
-    { id: 'r3_accessory_1', type: 'accessory', unlockRealm: 3, name: '元婴凝元佩', desc: '温养道基，增强修行底蕴，适合元婴境界使用。', effectText: '生命 +441', bonus: { hp: 441, bone: 2, auto: 0.031 } },
-    { id: 'r3_accessory_2', type: 'accessory', unlockRealm: 3, name: '元婴明窍戒', desc: '清明灵台，提高悟性，适合元婴境界使用。', effectText: '生命 +511，攻击 +94', bonus: { hp: 511, comprehension: 2, attack: 94 } },
-    { id: 'r3_accessory_3', type: 'accessory', unlockRealm: 3, name: '元婴天缘珠', desc: '牵引机缘，提高福缘，适合元婴境界使用。', effectText: '生命 +581', bonus: { hp: 581, fortune: 2, explore: 0.031 } },
-    { id: 'r3_talisman_1', type: 'talisman', unlockRealm: 3, name: '元婴御灵符', desc: '辅助吐纳，提升修炼效率，适合元婴境界使用。', effectText: '防御 +81', bonus: { defense: 81, auto: 0.041 } },
-    { id: 'r3_talisman_2', type: 'talisman', unlockRealm: 3, name: '元婴破障令', desc: '稳固心神，提高破境成功率，适合元婴境界使用。', effectText: '防御 +94', bonus: { defense: 94, breakthrough: 3, comprehension: 1 } },
-    { id: 'r3_talisman_3', type: 'talisman', unlockRealm: 3, name: '元婴寻宝印', desc: '感应灵机，提升探索收益，适合元婴境界使用。', effectText: '防御 +107，攻击 +122', bonus: { defense: 107, explore: 0.041, attack: 122 } },
-    { id: 'r4_weapon_1', type: 'weapon', unlockRealm: 4, name: '化神寒铁剑', desc: '攻伐稳健的标准灵兵，适合化神境界使用。', effectText: '攻击 +473', bonus: { attack: 473, manual: 0.042 } },
-    { id: 'r4_weapon_2', type: 'weapon', unlockRealm: 4, name: '化神破岳枪', desc: '势大力沉，适合正面压制，适合化神境界使用。', effectText: '攻击 +548，根骨 +2', bonus: { attack: 548, bone: 2 } },
-    { id: 'r4_weapon_3', type: 'weapon', unlockRealm: 4, name: '化神流光刃', desc: '出手迅疾，适合抢占先机，适合化神境界使用。', effectText: '攻击 +622，悟性 +2', bonus: { attack: 622, comprehension: 2 } },
-    { id: 'r4_armor_1', type: 'armor', unlockRealm: 4, name: '化神玄纹甲', desc: '护住经脉与气海，适合化神境界使用。', effectText: '生命 +2153，防御 +368', bonus: { hp: 2153, defense: 368, bone: 2 } },
-    { id: 'r4_armor_2', type: 'armor', unlockRealm: 4, name: '化神云纹袍', desc: '轻灵护体，久战不疲，适合化神境界使用。', effectText: '生命 +2494，防御 +426', bonus: { hp: 2494, defense: 426, auto: 0.033 } },
-    { id: 'r4_armor_3', type: 'armor', unlockRealm: 4, name: '化神镇岳铠', desc: '厚重坚实，适合硬抗强敌，适合化神境界使用。', effectText: '生命 +2836，防御 +484，突破 +4% ', bonus: { hp: 2836, defense: 484, breakthrough: 4 } },
-    { id: 'r4_accessory_1', type: 'accessory', unlockRealm: 4, name: '化神凝元佩', desc: '温养道基，增强修行底蕴，适合化神境界使用。', effectText: '生命 +998', bonus: { hp: 998, bone: 2, auto: 0.033 } },
-    { id: 'r4_accessory_2', type: 'accessory', unlockRealm: 4, name: '化神明窍戒', desc: '清明灵台，提高悟性，适合化神境界使用。', effectText: '生命 +1156，攻击 +213', bonus: { hp: 1156, comprehension: 2, attack: 213 } },
-    { id: 'r4_accessory_3', type: 'accessory', unlockRealm: 4, name: '化神天缘珠', desc: '牵引机缘，提高福缘，适合化神境界使用。', effectText: '生命 +1314', bonus: { hp: 1314, fortune: 2, explore: 0.033 } },
-    { id: 'r4_talisman_1', type: 'talisman', unlockRealm: 4, name: '化神御灵符', desc: '辅助吐纳，提升修炼效率，适合化神境界使用。', effectText: '防御 +184', bonus: { defense: 184, auto: 0.043 } },
-    { id: 'r4_talisman_2', type: 'talisman', unlockRealm: 4, name: '化神破障令', desc: '稳固心神，提高破境成功率，适合化神境界使用。', effectText: '防御 +213', bonus: { defense: 213, breakthrough: 4, comprehension: 2 } },
-    { id: 'r4_talisman_3', type: 'talisman', unlockRealm: 4, name: '化神寻宝印', desc: '感应灵机，提升探索收益，适合化神境界使用。', effectText: '防御 +242，攻击 +277', bonus: { defense: 242, explore: 0.043, attack: 277 } },
-    { id: 'r5_weapon_1', type: 'weapon', unlockRealm: 5, name: '炼虚寒铁剑', desc: '攻伐稳健的标准灵兵，适合炼虚境界使用。', effectText: '攻击 +1091', bonus: { attack: 1091, manual: 0.045 } },
-    { id: 'r5_weapon_2', type: 'weapon', unlockRealm: 5, name: '炼虚破岳枪', desc: '势大力沉，适合正面压制，适合炼虚境界使用。', effectText: '攻击 +1264，根骨 +2', bonus: { attack: 1264, bone: 2 } },
-    { id: 'r5_weapon_3', type: 'weapon', unlockRealm: 5, name: '炼虚流光刃', desc: '出手迅疾，适合抢占先机，适合炼虚境界使用。', effectText: '攻击 +1436，悟性 +2', bonus: { attack: 1436, comprehension: 2 } },
-    { id: 'r5_armor_1', type: 'armor', unlockRealm: 5, name: '炼虚玄纹甲', desc: '护住经脉与气海，适合炼虚境界使用。', effectText: '生命 +4969，防御 +848', bonus: { hp: 4969, defense: 848, bone: 2 } },
-    { id: 'r5_armor_2', type: 'armor', unlockRealm: 5, name: '炼虚云纹袍', desc: '轻灵护体，久战不疲，适合炼虚境界使用。', effectText: '生命 +5756，防御 +983', bonus: { hp: 5756, defense: 983, auto: 0.035 } },
-    { id: 'r5_armor_3', type: 'armor', unlockRealm: 5, name: '炼虚镇岳铠', desc: '厚重坚实，适合硬抗强敌，适合炼虚境界使用。', effectText: '生命 +6544，防御 +1117，突破 +4% ', bonus: { hp: 6544, defense: 1117, breakthrough: 4 } },
-    { id: 'r5_accessory_1', type: 'accessory', unlockRealm: 5, name: '炼虚凝元佩', desc: '温养道基，增强修行底蕴，适合炼虚境界使用。', effectText: '生命 +2303', bonus: { hp: 2303, bone: 2, auto: 0.035 } },
-    { id: 'r5_accessory_2', type: 'accessory', unlockRealm: 5, name: '炼虚明窍戒', desc: '清明灵台，提高悟性，适合炼虚境界使用。', effectText: '生命 +2668，攻击 +491', bonus: { hp: 2668, comprehension: 2, attack: 491 } },
-    { id: 'r5_accessory_3', type: 'accessory', unlockRealm: 5, name: '炼虚天缘珠', desc: '牵引机缘，提高福缘，适合炼虚境界使用。', effectText: '生命 +3032', bonus: { hp: 3032, fortune: 2, explore: 0.035 } },
-    { id: 'r5_talisman_1', type: 'talisman', unlockRealm: 5, name: '炼虚御灵符', desc: '辅助吐纳，提升修炼效率，适合炼虚境界使用。', effectText: '防御 +424', bonus: { defense: 424, auto: 0.045 } },
-    { id: 'r5_talisman_2', type: 'talisman', unlockRealm: 5, name: '炼虚破障令', desc: '稳固心神，提高破境成功率，适合炼虚境界使用。', effectText: '防御 +491', bonus: { defense: 491, breakthrough: 4, comprehension: 2 } },
-    { id: 'r5_talisman_3', type: 'talisman', unlockRealm: 5, name: '炼虚寻宝印', desc: '感应灵机，提升探索收益，适合炼虚境界使用。', effectText: '防御 +559，攻击 +638', bonus: { defense: 559, explore: 0.045, attack: 638 } },
-    { id: 'r6_weapon_1', type: 'weapon', unlockRealm: 6, name: '合体寒铁剑', desc: '攻伐稳健的标准灵兵，适合合体境界使用。', effectText: '攻击 +2545', bonus: { attack: 2545, manual: 0.048 } },
-    { id: 'r6_weapon_2', type: 'weapon', unlockRealm: 6, name: '合体破岳枪', desc: '势大力沉，适合正面压制，适合合体境界使用。', effectText: '攻击 +2948，根骨 +3', bonus: { attack: 2948, bone: 3 } },
-    { id: 'r6_weapon_3', type: 'weapon', unlockRealm: 6, name: '合体流光刃', desc: '出手迅疾，适合抢占先机，适合合体境界使用。', effectText: '攻击 +3352，悟性 +2', bonus: { attack: 3352, comprehension: 2 } },
-    { id: 'r6_armor_1', type: 'armor', unlockRealm: 6, name: '合体玄纹甲', desc: '护住经脉与气海，适合合体境界使用。', effectText: '生命 +11595，防御 +1980', bonus: { hp: 11595, defense: 1980, bone: 3 } },
-    { id: 'r6_armor_2', type: 'armor', unlockRealm: 6, name: '合体云纹袍', desc: '轻灵护体，久战不疲，适合合体境界使用。', effectText: '生命 +13432，防御 +2293', bonus: { hp: 13432, defense: 2293, auto: 0.037 } },
-    { id: 'r6_armor_3', type: 'armor', unlockRealm: 6, name: '合体镇岳铠', desc: '厚重坚实，适合硬抗强敌，适合合体境界使用。', effectText: '生命 +15268，防御 +2607，突破 +5% ', bonus: { hp: 15268, defense: 2607, breakthrough: 5 } },
-    { id: 'r6_accessory_1', type: 'accessory', unlockRealm: 6, name: '合体凝元佩', desc: '温养道基，增强修行底蕴，适合合体境界使用。', effectText: '生命 +5373', bonus: { hp: 5373, bone: 3, auto: 0.037 } },
-    { id: 'r6_accessory_2', type: 'accessory', unlockRealm: 6, name: '合体明窍戒', desc: '清明灵台，提高悟性，适合合体境界使用。', effectText: '生命 +6224，攻击 +1147', bonus: { hp: 6224, comprehension: 3, attack: 1147 } },
-    { id: 'r6_accessory_3', type: 'accessory', unlockRealm: 6, name: '合体天缘珠', desc: '牵引机缘，提高福缘，适合合体境界使用。', effectText: '生命 +7076', bonus: { hp: 7076, fortune: 3, explore: 0.037 } },
-    { id: 'r6_talisman_1', type: 'talisman', unlockRealm: 6, name: '合体御灵符', desc: '辅助吐纳，提升修炼效率，适合合体境界使用。', effectText: '防御 +990', bonus: { defense: 990, auto: 0.047 } },
-    { id: 'r6_talisman_2', type: 'talisman', unlockRealm: 6, name: '合体破障令', desc: '稳固心神，提高破境成功率，适合合体境界使用。', effectText: '防御 +1147', bonus: { defense: 1147, breakthrough: 5, comprehension: 2 } },
-    { id: 'r6_talisman_3', type: 'talisman', unlockRealm: 6, name: '合体寻宝印', desc: '感应灵机，提升探索收益，适合合体境界使用。', effectText: '防御 +1303，攻击 +1490', bonus: { defense: 1303, explore: 0.047, attack: 1490 } },
-    { id: 'r7_weapon_1', type: 'weapon', unlockRealm: 7, name: '大乘寒铁剑', desc: '攻伐稳健的标准灵兵，适合大乘境界使用。', effectText: '攻击 +5908', bonus: { attack: 5908, manual: 0.051 } },
-    { id: 'r7_weapon_2', type: 'weapon', unlockRealm: 7, name: '大乘破岳枪', desc: '势大力沉，适合正面压制，适合大乘境界使用。', effectText: '攻击 +6844，根骨 +3', bonus: { attack: 6844, bone: 3 } },
-    { id: 'r7_weapon_3', type: 'weapon', unlockRealm: 7, name: '大乘流光刃', desc: '出手迅疾，适合抢占先机，适合大乘境界使用。', effectText: '攻击 +7780，悟性 +2', bonus: { attack: 7780, comprehension: 2 } },
-    { id: 'r7_armor_1', type: 'armor', unlockRealm: 7, name: '大乘玄纹甲', desc: '护住经脉与气海，适合大乘境界使用。', effectText: '生命 +26916，防御 +4596', bonus: { hp: 26916, defense: 4596, bone: 3 } },
-    { id: 'r7_armor_2', type: 'armor', unlockRealm: 7, name: '大乘云纹袍', desc: '轻灵护体，久战不疲，适合大乘境界使用。', effectText: '生命 +31180，防御 +5324', bonus: { hp: 31180, defense: 5324, auto: 0.039 } },
-    { id: 'r7_armor_3', type: 'armor', unlockRealm: 7, name: '大乘镇岳铠', desc: '厚重坚实，适合硬抗强敌，适合大乘境界使用。', effectText: '生命 +35444，防御 +6052，突破 +5% ', bonus: { hp: 35444, defense: 6052, breakthrough: 5 } },
-    { id: 'r7_accessory_1', type: 'accessory', unlockRealm: 7, name: '大乘凝元佩', desc: '温养道基，增强修行底蕴，适合大乘境界使用。', effectText: '生命 +12474', bonus: { hp: 12474, bone: 3, auto: 0.039 } },
-    { id: 'r7_accessory_2', type: 'accessory', unlockRealm: 7, name: '大乘明窍戒', desc: '清明灵台，提高悟性，适合大乘境界使用。', effectText: '生命 +14450，攻击 +2662', bonus: { hp: 14450, comprehension: 3, attack: 2662 } },
-    { id: 'r7_accessory_3', type: 'accessory', unlockRealm: 7, name: '大乘天缘珠', desc: '牵引机缘，提高福缘，适合大乘境界使用。', effectText: '生命 +16426', bonus: { hp: 16426, fortune: 3, explore: 0.039 } },
-    { id: 'r7_talisman_1', type: 'talisman', unlockRealm: 7, name: '大乘御灵符', desc: '辅助吐纳，提升修炼效率，适合大乘境界使用。', effectText: '防御 +2298', bonus: { defense: 2298, auto: 0.049 } },
-    { id: 'r7_talisman_2', type: 'talisman', unlockRealm: 7, name: '大乘破障令', desc: '稳固心神，提高破境成功率，适合大乘境界使用。', effectText: '防御 +2662', bonus: { defense: 2662, breakthrough: 5, comprehension: 2 } },
-    { id: 'r7_talisman_3', type: 'talisman', unlockRealm: 7, name: '大乘寻宝印', desc: '感应灵机，提升探索收益，适合大乘境界使用。', effectText: '防御 +3026，攻击 +3458', bonus: { defense: 3026, explore: 0.049, attack: 3458 } },
-    { id: 'r8_weapon_1', type: 'weapon', unlockRealm: 8, name: '渡劫寒铁剑', desc: '攻伐稳健的标准灵兵，适合渡劫境界使用。', effectText: '攻击 +13817', bonus: { attack: 13817, manual: 0.054 } },
-    { id: 'r8_weapon_2', type: 'weapon', unlockRealm: 8, name: '渡劫破岳枪', desc: '势大力沉，适合正面压制，适合渡劫境界使用。', effectText: '攻击 +16006，根骨 +3', bonus: { attack: 16006, bone: 3 } },
-    { id: 'r8_weapon_3', type: 'weapon', unlockRealm: 8, name: '渡劫流光刃', desc: '出手迅疾，适合抢占先机，适合渡劫境界使用。', effectText: '攻击 +18194，悟性 +3', bonus: { attack: 18194, comprehension: 3 } },
-    { id: 'r8_armor_1', type: 'armor', unlockRealm: 8, name: '渡劫玄纹甲', desc: '护住经脉与气海，适合渡劫境界使用。', effectText: '生命 +62943，防御 +10746', bonus: { hp: 62943, defense: 10746, bone: 3 } },
-    { id: 'r8_armor_2', type: 'armor', unlockRealm: 8, name: '渡劫云纹袍', desc: '轻灵护体，久战不疲，适合渡劫境界使用。', effectText: '生命 +72914，防御 +12449', bonus: { hp: 72914, defense: 12449, auto: 0.041 } },
-    { id: 'r8_armor_3', type: 'armor', unlockRealm: 8, name: '渡劫镇岳铠', desc: '厚重坚实，适合硬抗强敌，适合渡劫境界使用。', effectText: '生命 +82886，防御 +14151，突破 +6% ', bonus: { hp: 82886, defense: 14151, breakthrough: 6 } },
-    { id: 'r8_accessory_1', type: 'accessory', unlockRealm: 8, name: '渡劫凝元佩', desc: '温养道基，增强修行底蕴，适合渡劫境界使用。', effectText: '生命 +29169', bonus: { hp: 29169, bone: 3, auto: 0.041 } },
-    { id: 'r8_accessory_2', type: 'accessory', unlockRealm: 8, name: '渡劫明窍戒', desc: '清明灵台，提高悟性，适合渡劫境界使用。', effectText: '生命 +33790，攻击 +6224', bonus: { hp: 33790, comprehension: 3, attack: 6224 } },
-    { id: 'r8_accessory_3', type: 'accessory', unlockRealm: 8, name: '渡劫天缘珠', desc: '牵引机缘，提高福缘，适合渡劫境界使用。', effectText: '生命 +38410', bonus: { hp: 38410, fortune: 3, explore: 0.041 } },
-    { id: 'r8_talisman_1', type: 'talisman', unlockRealm: 8, name: '渡劫御灵符', desc: '辅助吐纳，提升修炼效率，适合渡劫境界使用。', effectText: '防御 +5373', bonus: { defense: 5373, auto: 0.051 } },
-    { id: 'r8_talisman_2', type: 'talisman', unlockRealm: 8, name: '渡劫破障令', desc: '稳固心神，提高破境成功率，适合渡劫境界使用。', effectText: '防御 +6224', bonus: { defense: 6224, breakthrough: 6, comprehension: 3 } },
-    { id: 'r8_talisman_3', type: 'talisman', unlockRealm: 8, name: '渡劫寻宝印', desc: '感应灵机，提升探索收益，适合渡劫境界使用。', effectText: '防御 +7076，攻击 +8086', bonus: { defense: 7076, explore: 0.051, attack: 8086 } }
-  ]
+  // ===== 统一装备生成（全境界一致公式） =====
+  const realmLabels = realmNames  // ['炼气期','筑基期',...,'神尊期']
+  const realmShortLabels = ['炼气', '筑基', '金丹', '元婴', '化神', '炼虚', '合体', '大乘', '渡劫', '真仙', '玄仙', '金仙', '仙王', '仙帝', '真神', '天神', '神王', '神皇', '神尊']
+  const smoothFactor = Math.pow(2.28 / 3.15, 9)  // 0→8用2.28，9+用3.15平滑过渡
+  const weaponBases = [18, 21, 24]
+  const armorHpBases = [83, 96, 109]
+  const armorDefBases = [14, 16, 19]
+  const accHpBases = [38, 44, 51]
+  const accAtkBases = [0, 8, 0]
+  const talismanDefBases = [7, 8, 9]
+  const talismanAtkBases = [0, 0, 11]
+  const weaponNames = ['寒铁剑', '破岳枪', '流光刃']
+  const armorNames = ['玄纹甲', '云纹袍', '镇岳铠']
+  const accNames = ['凝元佩', '明窍戒', '天缘珠']
+  const talismanNames = ['御灵符', '破障令', '寻宝印']
 
+  function getEquipmentRate(realmIndex) {
+    if (realmIndex <= 8) return Math.pow(2.28, realmIndex)
+    return Math.pow(3.15, realmIndex) * smoothFactor
+  }
 
-  const immortalEquipmentRealmNames = ['真仙', '玄仙', '金仙', '仙王', '仙帝']
-  const immortalEquipmentCatalog = immortalEquipmentRealmNames.flatMap((label, index) => {
-    const realmIndex = index + 9
-    const rate = Math.pow(3.15, realmIndex)
-    const attrLevel = Math.floor(realmIndex / 2) + 3
-    return [
-      { id: `i${realmIndex}_weapon_1`, type: 'weapon', unlockRealm: realmIndex, name: `${label}仙锋剑`, desc: `${label}境界常见仙兵，剑锋蕴含仙界法则。`, effectText: `攻击 +${Math.floor(138 * rate)}`, bonus: { attack: Math.floor(138 * rate), manual: 0.056 + index * 0.004 } },
-      { id: `i${realmIndex}_weapon_2`, type: 'weapon', unlockRealm: realmIndex, name: `${label}破空戟`, desc: `${label}境界重兵，适合正面破阵。`, effectText: `攻击 +${Math.floor(158 * rate)}，根骨 +${attrLevel}`, bonus: { attack: Math.floor(158 * rate), bone: attrLevel } },
-      { id: `i${realmIndex}_weapon_3`, type: 'weapon', unlockRealm: realmIndex, name: `${label}流霞仙刃`, desc: `${label}境界快刃，出手如仙霞横空。`, effectText: `攻击 +${Math.floor(178 * rate)}，悟性 +${attrLevel}`, bonus: { attack: Math.floor(178 * rate), comprehension: attrLevel } },
-      { id: `i${realmIndex}_armor_1`, type: 'armor', unlockRealm: realmIndex, name: `${label}仙纹战甲`, desc: `${label}境界护具，可抵御仙界威压。`, effectText: `生命 +${Math.floor(650 * rate)}，防御 +${Math.floor(108 * rate)}`, bonus: { hp: Math.floor(650 * rate), defense: Math.floor(108 * rate), bone: attrLevel } },
-      { id: `i${realmIndex}_armor_2`, type: 'armor', unlockRealm: realmIndex, name: `${label}云霄仙袍`, desc: `${label}境界法袍，久战时灵息更稳。`, effectText: `生命 +${Math.floor(760 * rate)}，防御 +${Math.floor(124 * rate)}`, bonus: { hp: Math.floor(760 * rate), defense: Math.floor(124 * rate), auto: 0.042 + index * 0.003 } },
-      { id: `i${realmIndex}_armor_3`, type: 'armor', unlockRealm: realmIndex, name: `${label}镇界仙铠`, desc: `${label}境界重甲，适合挑战高压试炼。`, effectText: `生命 +${Math.floor(880 * rate)}，防御 +${Math.floor(142 * rate)}`, bonus: { hp: Math.floor(880 * rate), defense: Math.floor(142 * rate), breakthrough: 6 + index } },
-      { id: `i${realmIndex}_accessory_1`, type: 'accessory', unlockRealm: realmIndex, name: `${label}凝仙玉`, desc: `${label}境界饰品，温养仙元根基。`, effectText: `生命 +${Math.floor(320 * rate)}`, bonus: { hp: Math.floor(320 * rate), bone: attrLevel, auto: 0.041 + index * 0.003 } },
-      { id: `i${realmIndex}_accessory_2`, type: 'accessory', unlockRealm: realmIndex, name: `${label}明法戒`, desc: `${label}境界饰品，可明悟仙界法则。`, effectText: `生命 +${Math.floor(370 * rate)}，攻击 +${Math.floor(65 * rate)}`, bonus: { hp: Math.floor(370 * rate), attack: Math.floor(65 * rate), comprehension: attrLevel } },
-      { id: `i${realmIndex}_accessory_3`, type: 'accessory', unlockRealm: realmIndex, name: `${label}天缘珠`, desc: `${label}境界饰品，牵引仙界机缘。`, effectText: `生命 +${Math.floor(420 * rate)}`, bonus: { hp: Math.floor(420 * rate), fortune: attrLevel, explore: 0.042 + index * 0.003 } },
-      { id: `i${realmIndex}_talisman_1`, type: 'talisman', unlockRealm: realmIndex, name: `${label}御仙符`, desc: `${label}境界符佩，辅助吐纳仙息。`, effectText: `防御 +${Math.floor(55 * rate)}`, bonus: { defense: Math.floor(55 * rate), auto: 0.052 + index * 0.004 } },
-      { id: `i${realmIndex}_talisman_2`, type: 'talisman', unlockRealm: realmIndex, name: `${label}破境令`, desc: `${label}境界符佩，可镇住破境气机。`, effectText: `防御 +${Math.floor(65 * rate)}`, bonus: { defense: Math.floor(65 * rate), breakthrough: 7 + index, comprehension: attrLevel } },
-      { id: `i${realmIndex}_talisman_3`, type: 'talisman', unlockRealm: realmIndex, name: `${label}寻道印`, desc: `${label}境界符佩，感应仙界道韵。`, effectText: `防御 +${Math.floor(75 * rate)}，攻击 +${Math.floor(86 * rate)}`, bonus: { defense: Math.floor(75 * rate), attack: Math.floor(86 * rate), explore: 0.052 + index * 0.004 } }
-    ]
-  })
+  function makeGeneratedWeapon(realmIndex, tier) {
+    const rate = getEquipmentRate(realmIndex)
+    const atk = Math.floor(weaponBases[tier] * rate)
+    const attrLevel = Math.floor(realmIndex / 3) + 1
+    const bonus = { attack: atk, manual: 0.030 + realmIndex * 0.003 }
+    if (tier === 1) bonus.bone = attrLevel
+    if (tier === 2) bonus.comprehension = attrLevel
+    return {
+      id: `r${realmIndex}_weapon_${tier + 1}`, type: 'weapon', unlockRealm: realmIndex,
+      name: `${realmShortLabels[realmIndex]}${weaponNames[tier]}`,
+      desc: `${realmLabels[realmIndex]}常用灵兵。`,
+      effectText: `攻击 +${atk}${tier === 1 ? `，根骨 +${attrLevel}` : tier === 2 ? `，悟性 +${attrLevel}` : ''}`,
+      bonus
+    }
+  }
 
-  const divineEquipmentRealmNames = ['真神', '天神', '神王', '神皇', '神尊']
-  const divineEquipmentCatalog = divineEquipmentRealmNames.flatMap((label, index) => {
-    const realmIndex = index + 14
-    const rate = Math.pow(3.15, realmIndex)
-    const attrLevel = Math.floor(realmIndex / 2) + 3
-    return [
-      { id: `g${realmIndex}_weapon_1`, type: 'weapon', unlockRealm: realmIndex, name: `${label}神锋剑`, desc: `${label}境界常见神兵，剑锋蕴含神界法则。`, effectText: `攻击 +${Math.floor(210 * rate)}`, bonus: { attack: Math.floor(210 * rate), manual: 0.058 + index * 0.004 } },
-      { id: `g${realmIndex}_weapon_2`, type: 'weapon', unlockRealm: realmIndex, name: `${label}破界戟`, desc: `${label}境界重兵，适合正面破阵。`, effectText: `攻击 +${Math.floor(240 * rate)}，根骨 +${attrLevel}`, bonus: { attack: Math.floor(240 * rate), bone: attrLevel } },
-      { id: `g${realmIndex}_weapon_3`, type: 'weapon', unlockRealm: realmIndex, name: `${label}流火神刃`, desc: `${label}境界快刃，出手如神火横空。`, effectText: `攻击 +${Math.floor(270 * rate)}，悟性 +${attrLevel}`, bonus: { attack: Math.floor(270 * rate), comprehension: attrLevel } },
-      { id: `g${realmIndex}_armor_1`, type: 'armor', unlockRealm: realmIndex, name: `${label}神纹战甲`, desc: `${label}境界护具，可抵御神界威压。`, effectText: `生命 +${Math.floor(980 * rate)}，防御 +${Math.floor(165 * rate)}`, bonus: { hp: Math.floor(980 * rate), defense: Math.floor(165 * rate), bone: attrLevel } },
-      { id: `g${realmIndex}_armor_2`, type: 'armor', unlockRealm: realmIndex, name: `${label}云霄神袍`, desc: `${label}境界法袍，久战时灵息更稳。`, effectText: `生命 +${Math.floor(1140 * rate)}，防御 +${Math.floor(190 * rate)}`, bonus: { hp: Math.floor(1140 * rate), defense: Math.floor(190 * rate), auto: 0.044 + index * 0.003 } },
-      { id: `g${realmIndex}_armor_3`, type: 'armor', unlockRealm: realmIndex, name: `${label}镇界玄铠`, desc: `${label}境界重甲，适合挑战高压试炼。`, effectText: `生命 +${Math.floor(1320 * rate)}，防御 +${Math.floor(215 * rate)}`, bonus: { hp: Math.floor(1320 * rate), defense: Math.floor(215 * rate), breakthrough: 6 + index } },
-      { id: `g${realmIndex}_accessory_1`, type: 'accessory', unlockRealm: realmIndex, name: `${label}凝神玉`, desc: `${label}境界饰品，温养神源根基。`, effectText: `生命 +${Math.floor(490 * rate)}`, bonus: { hp: Math.floor(490 * rate), bone: attrLevel, auto: 0.043 + index * 0.003 } },
-      { id: `g${realmIndex}_accessory_2`, type: 'accessory', unlockRealm: realmIndex, name: `${label}明法戒`, desc: `${label}境界饰品，可明悟神界法则。`, effectText: `生命 +${Math.floor(560 * rate)}，攻击 +${Math.floor(100 * rate)}`, bonus: { hp: Math.floor(560 * rate), attack: Math.floor(100 * rate), comprehension: attrLevel } },
-      { id: `g${realmIndex}_accessory_3`, type: 'accessory', unlockRealm: realmIndex, name: `${label}天缘珠`, desc: `${label}境界饰品，牵引神界机缘。`, effectText: `生命 +${Math.floor(640 * rate)}`, bonus: { hp: Math.floor(640 * rate), fortune: attrLevel, explore: 0.044 + index * 0.003 } },
-      { id: `g${realmIndex}_talisman_1`, type: 'talisman', unlockRealm: realmIndex, name: `${label}御神符`, desc: `${label}境界符佩，辅助吐纳神息。`, effectText: `防御 +${Math.floor(85 * rate)}`, bonus: { defense: Math.floor(85 * rate), auto: 0.055 + index * 0.004 } },
-      { id: `g${realmIndex}_talisman_2`, type: 'talisman', unlockRealm: realmIndex, name: `${label}破境令`, desc: `${label}境界符佩，可镇住破境气机。`, effectText: `防御 +${Math.floor(100 * rate)}`, bonus: { defense: Math.floor(100 * rate), breakthrough: 7 + index, comprehension: attrLevel } },
-      { id: `g${realmIndex}_talisman_3`, type: 'talisman', unlockRealm: realmIndex, name: `${label}寻道印`, desc: `${label}境界符佩，感应神界道韵。`, effectText: `防御 +${Math.floor(115 * rate)}，攻击 +${Math.floor(132 * rate)}`, bonus: { defense: Math.floor(115 * rate), attack: Math.floor(132 * rate), explore: 0.055 + index * 0.004 } }
-    ]
-  })
+  function makeGeneratedArmor(realmIndex, tier) {
+    const rate = getEquipmentRate(realmIndex)
+    const hp = Math.floor(armorHpBases[tier] * rate)
+    const def = Math.floor(armorDefBases[tier] * rate)
+    const attrLevel = Math.floor(realmIndex / 3) + 1
+    const bonus = { hp, defense: def, bone: tier === 0 ? attrLevel : 0 }
+    if (tier === 1) bonus.auto = 0.025 + realmIndex * 0.002
+    if (tier === 2) bonus.breakthrough = 2 + Math.floor(realmIndex / 2)
+    return {
+      id: `r${realmIndex}_armor_${tier + 1}`, type: 'armor', unlockRealm: realmIndex,
+      name: `${realmShortLabels[realmIndex]}${armorNames[tier]}`,
+      desc: `${realmLabels[realmIndex]}常用护具。`,
+      effectText: `生命 +${hp}，防御 +${def}${tier === 2 ? `，突破 +${bonus.breakthrough}%` : ''}`,
+      bonus
+    }
+  }
+
+  function makeGeneratedAccessory(realmIndex, tier) {
+    const rate = getEquipmentRate(realmIndex)
+    const hp = Math.floor(accHpBases[tier] * rate)
+    const atk = Math.floor((accAtkBases[tier] || 0) * rate)
+    const attrLevel = Math.floor(realmIndex / 3) + 1
+    const bonus = { hp }
+    if (atk) bonus.attack = atk
+    if (tier === 0) { bonus.bone = attrLevel; bonus.auto = 0.025 + realmIndex * 0.002 }
+    if (tier === 1) bonus.comprehension = attrLevel
+    if (tier === 2) { bonus.fortune = attrLevel; bonus.explore = 0.025 + realmIndex * 0.002 }
+    return {
+      id: `r${realmIndex}_accessory_${tier + 1}`, type: 'accessory', unlockRealm: realmIndex,
+      name: `${realmShortLabels[realmIndex]}${accNames[tier]}`,
+      desc: `${realmLabels[realmIndex]}常用饰品。`,
+      effectText: `生命 +${hp}${atk ? `，攻击 +${atk}` : ''}`,
+      bonus
+    }
+  }
+
+  function makeGeneratedTalisman(realmIndex, tier) {
+    const rate = getEquipmentRate(realmIndex)
+    const def = Math.floor(talismanDefBases[tier] * rate)
+    const atk = Math.floor((talismanAtkBases[tier] || 0) * rate)
+    const attrLevel = Math.floor(realmIndex / 3) + 1
+    const bonus = { defense: def }
+    if (atk) bonus.attack = atk
+    if (tier === 0) bonus.auto = 0.035 + realmIndex * 0.002
+    if (tier === 1) { bonus.breakthrough = 2 + Math.floor(realmIndex / 2); bonus.comprehension = attrLevel }
+    if (tier === 2) { bonus.explore = 0.035 + realmIndex * 0.002 }
+    return {
+      id: `r${realmIndex}_talisman_${tier + 1}`, type: 'talisman', unlockRealm: realmIndex,
+      name: `${realmShortLabels[realmIndex]}${talismanNames[tier]}`,
+      desc: `${realmLabels[realmIndex]}常用符佩。`,
+      effectText: `防御 +${def}${atk ? `，攻击 +${atk}` : ''}`,
+      bonus
+    }
+  }
+
+  const generatedEquipmentCatalog = []
+  for (let realm = 0; realm <= 8; realm++) {
+    for (let tier = 0; tier < 3; tier++) {
+      generatedEquipmentCatalog.push(makeGeneratedWeapon(realm, tier))
+      generatedEquipmentCatalog.push(makeGeneratedArmor(realm, tier))
+      generatedEquipmentCatalog.push(makeGeneratedAccessory(realm, tier))
+      generatedEquipmentCatalog.push(makeGeneratedTalisman(realm, tier))
+    }
+  }
+
+  const immortalEquipmentCatalog = []
+  for (let realm = 9; realm <= 13; realm++) {
+    const label = realmShortLabels[realm]
+    const rate = getEquipmentRate(realm)
+    const attrLevel = Math.floor(realm / 2) + 3
+    const autoBase = 0.042 + (realm - 9) * 0.003
+    const manualBase = 0.056 + (realm - 9) * 0.004
+    const exploreBase = 0.042 + (realm - 9) * 0.003
+    const breakthroughBase = 6 + (realm - 9)
+    immortalEquipmentCatalog.push(
+      { id: `i${realm}_weapon_1`, type: 'weapon', unlockRealm: realm, name: `${label}仙锋剑`, desc: `${label}境界常见仙兵。`, effectText: `攻击 +${Math.floor(weaponBases[0] * rate)}`, bonus: { attack: Math.floor(weaponBases[0] * rate), manual: manualBase } },
+      { id: `i${realm}_weapon_2`, type: 'weapon', unlockRealm: realm, name: `${label}破空戟`, desc: `${label}境界重兵，适合正面破阵。`, effectText: `攻击 +${Math.floor(weaponBases[1] * rate)}，根骨 +${attrLevel}`, bonus: { attack: Math.floor(weaponBases[1] * rate), bone: attrLevel } },
+      { id: `i${realm}_weapon_3`, type: 'weapon', unlockRealm: realm, name: `${label}流霞仙刃`, desc: `${label}境界快刃，出手如仙霞横空。`, effectText: `攻击 +${Math.floor(weaponBases[2] * rate)}，悟性 +${attrLevel}`, bonus: { attack: Math.floor(weaponBases[2] * rate), comprehension: attrLevel } },
+      { id: `i${realm}_armor_1`, type: 'armor', unlockRealm: realm, name: `${label}仙纹战甲`, desc: `${label}境界护具。`, effectText: `生命 +${Math.floor(armorHpBases[0] * rate)}，防御 +${Math.floor(armorDefBases[0] * rate)}`, bonus: { hp: Math.floor(armorHpBases[0] * rate), defense: Math.floor(armorDefBases[0] * rate), bone: attrLevel } },
+      { id: `i${realm}_armor_2`, type: 'armor', unlockRealm: realm, name: `${label}云霄仙袍`, desc: `${label}境界法袍，久战时灵息更稳。`, effectText: `生命 +${Math.floor(armorHpBases[1] * rate)}，防御 +${Math.floor(armorDefBases[1] * rate)}`, bonus: { hp: Math.floor(armorHpBases[1] * rate), defense: Math.floor(armorDefBases[1] * rate), auto: autoBase } },
+      { id: `i${realm}_armor_3`, type: 'armor', unlockRealm: realm, name: `${label}镇界仙铠`, desc: `${label}境界重甲。`, effectText: `生命 +${Math.floor(armorHpBases[2] * rate)}，防御 +${Math.floor(armorDefBases[2] * rate)}`, bonus: { hp: Math.floor(armorHpBases[2] * rate), defense: Math.floor(armorDefBases[2] * rate), breakthrough: breakthroughBase } },
+      { id: `i${realm}_accessory_1`, type: 'accessory', unlockRealm: realm, name: `${label}凝仙玉`, desc: `${label}境界饰品，温养仙元根基。`, effectText: `生命 +${Math.floor(accHpBases[0] * rate)}`, bonus: { hp: Math.floor(accHpBases[0] * rate), bone: attrLevel, auto: autoBase } },
+      { id: `i${realm}_accessory_2`, type: 'accessory', unlockRealm: realm, name: `${label}明法戒`, desc: `${label}境界饰品，可明悟仙界法则。`, effectText: `生命 +${Math.floor(accHpBases[1] * rate)}，攻击 +${Math.floor(accAtkBases[1] * rate)}`, bonus: { hp: Math.floor(accHpBases[1] * rate), attack: Math.floor(accAtkBases[1] * rate), comprehension: attrLevel } },
+      { id: `i${realm}_accessory_3`, type: 'accessory', unlockRealm: realm, name: `${label}天缘珠`, desc: `${label}境界饰品，牵引仙界机缘。`, effectText: `生命 +${Math.floor(accHpBases[2] * rate)}`, bonus: { hp: Math.floor(accHpBases[2] * rate), fortune: attrLevel, explore: exploreBase } },
+      { id: `i${realm}_talisman_1`, type: 'talisman', unlockRealm: realm, name: `${label}御仙符`, desc: `${label}境界符佩，辅助吐纳仙息。`, effectText: `防御 +${Math.floor(talismanDefBases[0] * rate)}`, bonus: { defense: Math.floor(talismanDefBases[0] * rate), auto: 0.052 + (realm - 9) * 0.004 } },
+      { id: `i${realm}_talisman_2`, type: 'talisman', unlockRealm: realm, name: `${label}破境令`, desc: `${label}境界符佩，可镇住破境气机。`, effectText: `防御 +${Math.floor(talismanDefBases[1] * rate)}`, bonus: { defense: Math.floor(talismanDefBases[1] * rate), breakthrough: breakthroughBase + 1, comprehension: attrLevel } },
+      { id: `i${realm}_talisman_3`, type: 'talisman', unlockRealm: realm, name: `${label}寻道印`, desc: `${label}境界符佩，感应仙界道韵。`, effectText: `防御 +${Math.floor(talismanDefBases[2] * rate)}，攻击 +${Math.floor(talismanAtkBases[2] * rate)}`, bonus: { defense: Math.floor(talismanDefBases[2] * rate), attack: Math.floor(talismanAtkBases[2] * rate), explore: exploreBase + 0.010 } }
+    )
+  }
+
+  const divineEquipmentCatalog = []
+  for (let realm = 14; realm <= 18; realm++) {
+    const label = realmShortLabels[realm]
+    const rate = getEquipmentRate(realm)
+    const idx = realm - 14
+    const attrLevel = Math.floor(realm / 2) + 3
+    const autoBase = 0.044 + idx * 0.003
+    const manualBase = 0.058 + idx * 0.004
+    const exploreBase = 0.044 + idx * 0.003
+    const breakthroughBase = 6 + idx
+    divineEquipmentCatalog.push(
+      { id: `g${realm}_weapon_1`, type: 'weapon', unlockRealm: realm, name: `${label}神锋剑`, desc: `${label}境界常见神兵。`, effectText: `攻击 +${Math.floor(weaponBases[0] * rate)}`, bonus: { attack: Math.floor(weaponBases[0] * rate), manual: manualBase } },
+      { id: `g${realm}_weapon_2`, type: 'weapon', unlockRealm: realm, name: `${label}破界戟`, desc: `${label}境界重兵，适合正面破阵。`, effectText: `攻击 +${Math.floor(weaponBases[1] * rate)}，根骨 +${attrLevel}`, bonus: { attack: Math.floor(weaponBases[1] * rate), bone: attrLevel } },
+      { id: `g${realm}_weapon_3`, type: 'weapon', unlockRealm: realm, name: `${label}流火神刃`, desc: `${label}境界快刃，出手如神火横空。`, effectText: `攻击 +${Math.floor(weaponBases[2] * rate)}，悟性 +${attrLevel}`, bonus: { attack: Math.floor(weaponBases[2] * rate), comprehension: attrLevel } },
+      { id: `g${realm}_armor_1`, type: 'armor', unlockRealm: realm, name: `${label}神纹战甲`, desc: `${label}境界护具。`, effectText: `生命 +${Math.floor(armorHpBases[0] * rate)}，防御 +${Math.floor(armorDefBases[0] * rate)}`, bonus: { hp: Math.floor(armorHpBases[0] * rate), defense: Math.floor(armorDefBases[0] * rate), bone: attrLevel } },
+      { id: `g${realm}_armor_2`, type: 'armor', unlockRealm: realm, name: `${label}云霄神袍`, desc: `${label}境界法袍，久战时灵息更稳。`, effectText: `生命 +${Math.floor(armorHpBases[1] * rate)}，防御 +${Math.floor(armorDefBases[1] * rate)}`, bonus: { hp: Math.floor(armorHpBases[1] * rate), defense: Math.floor(armorDefBases[1] * rate), auto: autoBase } },
+      { id: `g${realm}_armor_3`, type: 'armor', unlockRealm: realm, name: `${label}镇界玄铠`, desc: `${label}境界重甲。`, effectText: `生命 +${Math.floor(armorHpBases[2] * rate)}，防御 +${Math.floor(armorDefBases[2] * rate)}`, bonus: { hp: Math.floor(armorHpBases[2] * rate), defense: Math.floor(armorDefBases[2] * rate), breakthrough: breakthroughBase } },
+      { id: `g${realm}_accessory_1`, type: 'accessory', unlockRealm: realm, name: `${label}凝神玉`, desc: `${label}境界饰品，温养神源根基。`, effectText: `生命 +${Math.floor(accHpBases[0] * rate)}`, bonus: { hp: Math.floor(accHpBases[0] * rate), bone: attrLevel, auto: autoBase } },
+      { id: `g${realm}_accessory_2`, type: 'accessory', unlockRealm: realm, name: `${label}明神戒`, desc: `${label}境界饰品，可明悟神界法则。`, effectText: `生命 +${Math.floor(accHpBases[1] * rate)}，攻击 +${Math.floor(accAtkBases[1] * rate)}`, bonus: { hp: Math.floor(accHpBases[1] * rate), attack: Math.floor(accAtkBases[1] * rate), comprehension: attrLevel } },
+      { id: `g${realm}_accessory_3`, type: 'accessory', unlockRealm: realm, name: `${label}天命珠`, desc: `${label}境界饰品，牵引神界机缘。`, effectText: `生命 +${Math.floor(accHpBases[2] * rate)}`, bonus: { hp: Math.floor(accHpBases[2] * rate), fortune: attrLevel, explore: exploreBase } },
+      { id: `g${realm}_talisman_1`, type: 'talisman', unlockRealm: realm, name: `${label}御神符`, desc: `${label}境界符佩，辅助吐纳神息。`, effectText: `防御 +${Math.floor(talismanDefBases[0] * rate)}`, bonus: { defense: Math.floor(talismanDefBases[0] * rate), auto: 0.055 + idx * 0.004 } },
+      { id: `g${realm}_talisman_2`, type: 'talisman', unlockRealm: realm, name: `${label}破界令`, desc: `${label}境界符佩，可镇住破境气机。`, effectText: `防御 +${Math.floor(talismanDefBases[1] * rate)}`, bonus: { defense: Math.floor(talismanDefBases[1] * rate), breakthrough: breakthroughBase + 1, comprehension: attrLevel } },
+      { id: `g${realm}_talisman_3`, type: 'talisman', unlockRealm: realm, name: `${label}觅道印`, desc: `${label}境界符佩，感应神界道韵。`, effectText: `防御 +${Math.floor(talismanDefBases[2] * rate)}，攻击 +${Math.floor(talismanAtkBases[2] * rate)}`, bonus: { defense: Math.floor(talismanDefBases[2] * rate), attack: Math.floor(talismanAtkBases[2] * rate), explore: exploreBase + 0.011 } }
+    )
+  }
+
 
   const equipmentCatalog = [
     ...baseEquipmentCatalog,
@@ -376,14 +377,14 @@ export function useGame(currentPageType = 'cultivation') {
   ]
 
   const artifactCatalog = [
-    { id: 'taichuSword', type: 'weapon', name: '太初神剑', desc: '传说诞生于太初混沌的神兵，会随主人境界成长。装备后占用武器位，不能与普通武器同时生效。', dropRate: 0.0030, base: { attack: 42, hp: 80, defense: 12 }, growth: { attack: 1.62, hp: 1.42, defense: 1.38 }, bonus: { manual: 0.04, breakthrough: 2 } },
-    { id: 'xuantianBell', type: 'armor', name: '玄天镇魂钟', desc: '钟声可镇压妖邪神魂，护住肉身与元神，会随主人境界成长。装备后占用护具位，不能与普通护具同时生效。', dropRate: 0.0022, base: { attack: 20, hp: 170, defense: 28 }, growth: { attack: 1.35, hp: 1.62, defense: 1.58 }, bonus: { auto: 0.04, alchemy: 0.02 } },
-    { id: 'wanfaMirror', type: 'accessory', name: '万法归元镜', desc: '镜中似有万法流转，可映照修士道基，会随主人境界成长。装备后占用饰品位，不能与普通饰品同时生效。', dropRate: 0.0016, base: { attack: 30, hp: 115, defense: 18 }, growth: { attack: 1.50, hp: 1.48, defense: 1.42 }, bonus: { explore: 0.03, breakthrough: 3, comprehension: 1 } },
-    { id: 'kunlunRune', type: 'talisman', name: '昆仑镇界符', desc: '符中封有昆仑界纹，可镇压气海波澜，会随主人境界成长。装备后占用符佩位，不能与普通符佩同时生效。', dropRate: 0.0018, base: { attack: 24, hp: 125, defense: 22 }, growth: { attack: 1.42, hp: 1.52, defense: 1.50 }, bonus: { auto: 0.03, explore: 0.03, fortune: 1 } },
-    { id: 'starSlayerBlade', type: 'weapon', name: '斩星古刃', desc: '刃锋可斩星辉，偏重极致杀伐，会随主人境界成长。装备后占用武器位。', dropRate: 0.0012, base: { attack: 58, hp: 60, defense: 8 }, growth: { attack: 1.70, hp: 1.30, defense: 1.25 }, bonus: { manual: 0.06 } },
-    { id: 'nineDragonArmor', type: 'armor', name: '九龙玄甲', desc: '九龙纹路盘踞甲身，适合镇妖塔久战，会随主人境界成长。装备后占用护具位。', dropRate: 0.0011, base: { attack: 16, hp: 230, defense: 38 }, growth: { attack: 1.25, hp: 1.72, defense: 1.66 }, bonus: { breakthrough: 2 } },
-    { id: 'heavenFateJade', type: 'accessory', name: '天命道玉', desc: '道玉能牵引一线天命，偏重福缘与破境，会随主人境界成长。装备后占用饰品位。', dropRate: 0.0010, base: { attack: 22, hp: 130, defense: 18 }, growth: { attack: 1.38, hp: 1.48, defense: 1.38 }, bonus: { fortune: 2, breakthrough: 4, explore: 0.02 } },
-    { id: 'chaosTalisman', type: 'talisman', name: '混沌万象符', desc: '符纹如混沌未开，可小幅增益诸法，会随主人境界成长。装备后占用符佩位。', dropRate: 0.0008, base: { attack: 28, hp: 150, defense: 24 }, growth: { attack: 1.46, hp: 1.55, defense: 1.50 }, bonus: { auto: 0.03, manual: 0.03, alchemy: 0.02, explore: 0.02 } }
+    { id: 'taichuSword', type: 'weapon', name: '太初神剑', desc: '传说诞生于太初混沌的神兵，会随主人境界成长。装备后占用武器位，不能与普通武器同时生效。', dropRate: 0.0030, base: { attack: 42, hp: 80, defense: 12 }, growth: { attack: 2.40, hp: 2.10, defense: 2.05 }, bonus: { manual: 0.04, breakthrough: 2 } },
+    { id: 'xuantianBell', type: 'armor', name: '玄天镇魂钟', desc: '钟声可镇压妖邪神魂，护住肉身与元神，会随主人境界成长。装备后占用护具位，不能与普通护具同时生效。', dropRate: 0.0022, base: { attack: 20, hp: 170, defense: 28 }, growth: { attack: 2.00, hp: 2.40, defense: 2.35 }, bonus: { auto: 0.04, alchemy: 0.02 } },
+    { id: 'wanfaMirror', type: 'accessory', name: '万法归元镜', desc: '镜中似有万法流转，可映照修士道基，会随主人境界成长。装备后占用饰品位，不能与普通饰品同时生效。', dropRate: 0.0016, base: { attack: 30, hp: 115, defense: 18 }, growth: { attack: 2.25, hp: 2.20, defense: 2.10 }, bonus: { explore: 0.03, breakthrough: 3, comprehension: 1 } },
+    { id: 'kunlunRune', type: 'talisman', name: '昆仑镇界符', desc: '符中封有昆仑界纹，可镇压气海波澜，会随主人境界成长。装备后占用符佩位，不能与普通符佩同时生效。', dropRate: 0.0018, base: { attack: 24, hp: 125, defense: 22 }, growth: { attack: 2.10, hp: 2.25, defense: 2.20 }, bonus: { auto: 0.03, explore: 0.03, fortune: 1 } },
+    { id: 'starSlayerBlade', type: 'weapon', name: '斩星古刃', desc: '刃锋可斩星辉，偏重极致杀伐，会随主人境界成长。装备后占用武器位。', dropRate: 0.0012, base: { attack: 58, hp: 60, defense: 8 }, growth: { attack: 2.55, hp: 1.90, defense: 1.85 }, bonus: { manual: 0.06 } },
+    { id: 'nineDragonArmor', type: 'armor', name: '九龙玄甲', desc: '九龙纹路盘踞甲身，适合镇妖塔久战，会随主人境界成长。装备后占用护具位。', dropRate: 0.0011, base: { attack: 16, hp: 230, defense: 38 }, growth: { attack: 1.85, hp: 2.55, defense: 2.45 }, bonus: { breakthrough: 2 } },
+    { id: 'heavenFateJade', type: 'accessory', name: '天命道玉', desc: '道玉能牵引一线天命，偏重福缘与破境，会随主人境界成长。装备后占用饰品位。', dropRate: 0.0010, base: { attack: 22, hp: 130, defense: 18 }, growth: { attack: 2.05, hp: 2.20, defense: 2.05 }, bonus: { fortune: 2, breakthrough: 4, explore: 0.02 } },
+    { id: 'chaosTalisman', type: 'talisman', name: '混沌万象符', desc: '符纹如混沌未开，可小幅增益诸法，会随主人境界成长。装备后占用符佩位。', dropRate: 0.0008, base: { attack: 28, hp: 150, defense: 24 }, growth: { attack: 2.15, hp: 2.30, defense: 2.20 }, bonus: { auto: 0.03, manual: 0.03, alchemy: 0.02, explore: 0.02 } }
   ]
 
 
@@ -632,6 +633,7 @@ export function useGame(currentPageType = 'cultivation') {
       defBuffTurns: 0,
       dodgeBuff: 0,
       dodgeBuffTurns: 0,
+      activeDodge: false,
       enemyAtkDown: 0,
       totalSteps: 1,
       returnUrl: '/pages/sect/sect'
@@ -936,8 +938,10 @@ export function useGame(currentPageType = 'cultivation') {
       if (getEquipmentCount(item.id) <= 0) return
       const isDivine = String(item.id).startsWith('g')
       const scale = isDivine ? currentDivineRate / Math.max(1, Math.pow(3.15, normalizeNumber(item.unlockRealm, 14))) : 1
+      const variance = getEquipmentVariance(item.id)
       Object.keys(item.bonus || {}).forEach(key => {
-        bonus[key] = (bonus[key] || 0) + Math.floor(item.bonus[key] * scale)
+        const raw = item.bonus[key] || 0
+        bonus[key] = (bonus[key] || 0) + Math.floor(raw * scale * variance)
       })
     })
     equippedArtifacts.value.forEach(artifact => {
@@ -1009,13 +1013,30 @@ export function useGame(currentPageType = 'cultivation') {
   const availableBattleSkills = computed(() => {
     const loadout = player.battleLoadout || []
     const equipped = battleSkills.filter(skill => loadout.includes(skill.id) && player.realmIndex >= skill.unlockRealm)
-    return [battleSkills[0], ...equipped]
+    const shadowSkill = battleSkills.find(s => s.id === 'shadowDodge')
+    const alwaysAvailable = [battleSkills[0]]
+    if (shadowSkill && player.realmIndex >= (shadowSkill.unlockRealm || 2)) alwaysAvailable.push(shadowSkill)
+    return [...alwaysAvailable, ...equipped.filter(s => s.id !== 'shadowDodge')]
   })
   const battleFleeChance = computed(() => {
+    // 逃跑成功率：实力差距上限70%，用于主动逃跑和主动闪避技能
+    const enemyPower = (battle.enemyAttack || 0) * 3.5 + (battle.enemyDefense || 0) * 2 + (battle.enemyMaxHp || 1) * 0.06
+    const powerRatio = battlePower.value / Math.max(1, enemyPower)
+    const powerBonus = Math.min(0.70, Math.max(0, (powerRatio - 0.3) * 0.65))
+    const equipBonus = Math.min(0.15, equipmentBonus.value.explore + equipmentBonus.value.bone * 0.01)
+    const skillDodge = Math.min(0.15, Number(battle.dodgeBuff) || 0)
     const hpRatio = battle.playerHp > 0 ? battle.playerHp / Math.max(1, battle.playerMaxHp) : 0
-    const baseChance = 0.25 + actualComprehension.value * 0.01
-    const lowHpBonus = hpRatio < 0.3 ? 0.2 : 0
-    return Math.min(1, baseChance + lowHpBonus)
+    const lowHpBonus = hpRatio < 0.3 ? 0.12 : 0
+    return Math.min(0.90, powerBonus + equipBonus + skillDodge + lowHpBonus)
+  })
+  const battleDodgeChance = computed(() => {
+    // 被动闪避率：实力差距上限30%，用于自动抵挡敌方攻击
+    const enemyPower = (battle.enemyAttack || 0) * 3.5 + (battle.enemyDefense || 0) * 2 + (battle.enemyMaxHp || 1) * 0.06
+    const powerRatio = battlePower.value / Math.max(1, enemyPower)
+    const powerBonus = Math.min(0.30, Math.max(0, (powerRatio - 0.5) * 0.35))
+    const equipBonus = Math.min(0.15, equipmentBonus.value.explore + equipmentBonus.value.bone * 0.01)
+    const skillDodge = Math.min(0.15, Number(battle.dodgeBuff) || 0)
+    return Math.min(0.55, powerBonus + equipBonus + skillDodge)
   })
   function isSkillEquipped(skillId) {
     return (player.battleLoadout || []).includes(skillId)
@@ -1024,6 +1045,10 @@ export function useGame(currentPageType = 'cultivation') {
     const skill = battleSkills.find(item => item.id === skillId)
     if (!skill || skill.id === 'basic') {
       showFeedback('灵剑斩常驻可用，无需装备')
+      return
+    }
+    if (skill.category === 'dodge') {
+      showFeedback('影遁术常驻可用，无需装备')
       return
     }
     if (player.realmIndex < normalizeNumber(skill.unlockRealm, 0)) {
@@ -1082,6 +1107,7 @@ export function useGame(currentPageType = 'cultivation') {
   function getBattleSkillMaxLevel(skillOrId) {
     const skill = typeof skillOrId === 'string' ? battleSkills.find(item => item.id === skillOrId) : skillOrId
     if (!skill) return 5
+    if (skill.category === 'dodge') return 10
     return 5 + player.realmIndex * 5
   }
   function getAttributeMax() {
@@ -1300,7 +1326,7 @@ export function useGame(currentPageType = 'cultivation') {
       herbs: 5 * player.realmIndex
     }
   })
-  const dailyExchangeCap = computed(() => 10 + sect.contributionLevel * 5)
+  const dailyExchangeCap = computed(() => Math.min(60, 10 + sect.contributionLevel * 5))
   const furnaceName = computed(() => furnaceNames[Math.max(0, Math.min(furnaceNames.length - 1, alchemy.furnaceLevel - 1))])
   const maxBatchCount = computed(() => player.realmIndex >= 2 ? 10 : 1)
   const selectedMap = computed(() => explorationMaps.find(item => item.id === exploration.selectedMapId) || explorationMaps[0])
@@ -1359,7 +1385,7 @@ export function useGame(currentPageType = 'cultivation') {
   const dailyManualLimit = computed(() => 8 + player.realmIndex * 4)
   const manualCultivateLeft = computed(() => Math.max(0, dailyManualLimit.value - normalizeNumber(daily.manualCultivateUsed, 0)))
 
-  const dailyTalismanExchangeLimit = computed(() => 10 + (normalizeNumber(sect.contributionLevel, 0) * 5))
+  const dailyTalismanExchangeLimit = computed(() => Math.min(60, 10 + normalizeNumber(sect.contributionLevel, 0) * 5))
   const dailyTalismanExchangeLeft = computed(() => Math.max(0, dailyTalismanExchangeLimit.value - normalizeNumber(daily.dailyTalismanExchangeUsed, 0)))
 
   const autoGainText = computed(() => formatNumber(autoGain.value))
@@ -1609,6 +1635,15 @@ export function useGame(currentPageType = 'cultivation') {
     return Number((found.manualBase + (level - 1) * 0.09).toFixed(2))
   }
 
+  function getEquipmentVariance(id) {
+    let hash = 0
+    for (let i = 0; i < id.length; i++) {
+      hash = ((hash << 5) - hash) + id.charCodeAt(i)
+      hash |= 0
+    }
+    return 0.88 + (Math.abs(hash) % 25) / 100
+  }
+
   function getEquipmentCount(id) {
     return inventory.equipments[id] || inventory.special[id] || 0
   }
@@ -1661,12 +1696,13 @@ export function useGame(currentPageType = 'cultivation') {
     const info = artifactCatalog.find(item => item.id === id)
     const state = getArtifactState(id)
     if (!info || !state.owned) return {}
-    const realmRate = getRealmBattleRate(state.realmIndex, state.realmLayer)
+    const realmRate = Math.pow(3.15, state.realmIndex)
     const layerBoost = 1 + (state.realmLayer - 1) * 0.055
+    const variance = getEquipmentVariance(id)
     return {
-      attack: Math.floor(info.base.attack * realmRate * info.growth.attack * layerBoost),
-      hp: Math.floor(info.base.hp * realmRate * info.growth.hp * layerBoost),
-      defense: Math.floor(info.base.defense * realmRate * info.growth.defense * layerBoost),
+      attack: Math.floor(info.base.attack * realmRate * info.growth.attack * layerBoost * variance),
+      hp: Math.floor(info.base.hp * realmRate * info.growth.hp * layerBoost * variance),
+      defense: Math.floor(info.base.defense * realmRate * info.growth.defense * layerBoost * variance),
       ...(info.bonus || {})
     }
   }
@@ -2706,7 +2742,9 @@ export function useGame(currentPageType = 'cultivation') {
     rewards.push(`修为 +${cultivationReward}`)
     pushExploreStep(steps, `你顺势运转周天，将沿途灵气炼入气海，修为增长 ${cultivationReward} 点。`)
 
-    const eventCount = selectedDifficulty.value.id === 'abyss' ? 5 : selectedDifficulty.value.id === 'hard' ? 4 : 3
+    const baseCount = selectedDifficulty.value.id === 'abyss' ? 12 : selectedDifficulty.value.id === 'hard' ? 9 : 6
+    const randomExtra = selectedDifficulty.value.id === 'abyss' ? Math.floor(Math.random() * 16) : selectedDifficulty.value.id === 'hard' ? Math.floor(Math.random() * 11) : Math.floor(Math.random() * 11)
+    const eventCount = baseCount + randomExtra
     const events = getExploreEventPool()
 
     Object.assign(explorationFlow, {
@@ -2784,6 +2822,8 @@ export function useGame(currentPageType = 'cultivation') {
     const buffs = usable.filter(skill => skill.category === 'buff')
     const heals = usable.filter(skill => skill.category === 'heal')
     const attacks = usable.filter(skill => skill.category === 'attack')
+    const dodges = usable.filter(skill => skill.category === 'dodge')
+    if (currentHpPercent < 0.35 && dodges.length) return dodges[0]
     if (round === 1 && buffs.length) return buffs[0]
     if (currentHpPercent < 0.45 && heals.length) return heals[0]
     if (round % 4 === 0 && buffs.length) return buffs[0]
@@ -2899,6 +2939,7 @@ export function useGame(currentPageType = 'cultivation') {
     battle.defBuffTurns = 0
     battle.dodgeBuff = 0
     battle.dodgeBuffTurns = 0
+    battle.activeDodge = false
     battle.enemyAtkDown = 0
   }
 
@@ -2948,11 +2989,13 @@ export function useGame(currentPageType = 'cultivation') {
     const enemyRealmPressure = getRealmPressure(enemy.realmIndex, player.realmIndex)
     const defBuff = Number(battle.defBuff) || 0
     const enemyAtkDown = Number(battle.enemyAtkDown) || 0
-    const baseDodge = actualComprehension.value * 0.004
-    const dodgeBuff = Number(battle.dodgeBuff) || 0
-    const totalDodge = Math.min(1, baseDodge + dodgeBuff)
+    // 被动闪避：使用 battleDodgeChance
+    const totalDodge = battleDodgeChance.value
     if (totalDodge > 0 && Math.random() < totalDodge) return 0
-    return Math.max(5, Math.floor(enemy.attack * (1 - enemyAtkDown) * (0.88 + Math.random() * 0.24) * enemyRealmPressure - battleDefense.value * (1 + defBuff) * 0.68 - shield))
+    const baseDamage = Math.max(5, Math.floor(enemy.attack * (1 - enemyAtkDown) * (0.88 + Math.random() * 0.24) * enemyRealmPressure - battleDefense.value * (1 + defBuff) * 0.68 - shield))
+    // 超过12回合后敌方伤害逐渐增强
+    const overRound = Math.max(0, (Number(battle.round) || 1) - 12)
+    return Math.floor(baseDamage * (1 + overRound * 0.08))
   }
 
   function startManualBattle(enemy, options = {}) {
@@ -3028,8 +3071,15 @@ export function useGame(currentPageType = 'cultivation') {
       addLog(`镇妖塔中，你败于${enemy.name}，暂且退回塔外调息。`)
     }
 
-    player.hp = battleMaxHp.value
-    player.spirit = player.maxSpirit
+    if (source !== 'exploration') {
+      player.hp = battleMaxHp.value
+      player.spirit = player.maxSpirit
+      rewards.push('生命与灵力已回满')
+    } else {
+      player.hp = battle.playerHp
+      player.spirit = battle.playerSpirit
+      rewards.push('生命与灵力维持当前状态')
+    }
     battle.playerHp = player.hp
     battle.playerMaxHp = battleMaxHp.value
     battle.playerSpirit = player.spirit
@@ -3075,10 +3125,25 @@ export function useGame(currentPageType = 'cultivation') {
     battle.playerSpirit = player.spirit
     battle.playerMaxSpirit = player.maxSpirit
 
-    const isBuffOnly = skill.category === 'buff' && !skill.power
-    const isHealOnly = skill.category === 'heal' && !skill.power
+    const isDodge = skill.category === 'dodge'
+    const isBuffOnly = !isDodge && skill.category === 'buff' && !skill.power
+    const isHealOnly = !isDodge && skill.category === 'heal' && !skill.power
 
-    if (isBuffOnly) {
+    if (isDodge) {
+      const dodgeLevel = getBattleSkillLevel(skill)
+      const dodgeRate = Math.min(0.15, dodgeLevel * 0.015)
+      const success = Math.random() < dodgeRate
+      if (success) {
+        battle.activeDodge = true
+        battle.currentProcess.push(`第 ${battle.round} 回合，你施展「${skill.name}」${cost ? `，消耗灵力 ${cost}` : ''}，身化残影——下一次敌方攻击必定闪避！`)
+        const buffText = getBuffStatusText()
+        if (buffText) battle.currentProcess[battle.currentProcess.length - 1] += ` ${buffText}`
+      } else {
+        battle.currentProcess.push(`第 ${battle.round} 回合，你施展「${skill.name}」${cost ? `，消耗灵力 ${cost}` : ''}，但未能完全融入暗影……`)
+        const buffText = getBuffStatusText()
+        if (buffText) battle.currentProcess[battle.currentProcess.length - 1] += ` ${buffText}`
+      }
+    } else if (isBuffOnly) {
       applySkillBuff(skill)
       const buffText = getBuffStatusText()
       battle.currentProcess.push(`第 ${battle.round} 回合，你施展「${skill.name}」${cost ? `，消耗灵力 ${cost}` : ''}。${buffText ? `当前状态：${buffText}` : ''}`)
@@ -3089,7 +3154,8 @@ export function useGame(currentPageType = 'cultivation') {
       battle.playerMaxHp = battleMaxHp.value
       battle.currentProcess.push(`第 ${battle.round} 回合，你施展「${skill.name}」${cost ? `，消耗灵力 ${cost}` : ''}，恢复生命 ${formatNumber(healAmount)} 点。`)
     } else {
-      const enemyDodgeChance = 0.025 + (enemy.realmIndex || 0) * 0.01
+      const enemyPowerRatio = getBattlePowerFromStats(enemy) / Math.max(1, battlePower.value)
+      const enemyDodgeChance = Math.min(0.45, 0.15 + Math.max(0, (enemyPowerRatio - 1) * 0.40))
       if (Math.random() < enemyDodgeChance) {
         applySkillBuff(skill)
         let line = `第 ${battle.round} 回合，你施展「${skill.name}」${cost ? `，消耗灵力 ${cost}` : ''}，但被${enemy.name}灵巧闪避。`
@@ -3128,9 +3194,15 @@ export function useGame(currentPageType = 'cultivation') {
     }
 
     tickBattleBuffs()
-    const enemyDamage = calculateEnemyBattleDamage(enemy, 0)
+    // 主动闪避：如果 activeDodge 为 true，本回合敌方攻击必定未命中
+    let activeDodgeActive = false
+    if (battle.activeDodge) {
+      battle.activeDodge = false
+      activeDodgeActive = true
+    }
+    const enemyDamage = activeDodgeActive ? 0 : calculateEnemyBattleDamage(enemy, 0)
     if (enemyDamage === 0) {
-      battle.currentProcess.push(`灵巧闪避！你躲开了${enemy.name}的攻击。`)
+      battle.currentProcess.push(activeDodgeActive ? `残影消散——你完美闪避了${enemy.name}的攻击！` : `灵巧闪避！你躲开了${enemy.name}的攻击。`)
     } else {
       player.hp = Math.max(0, player.hp - enemyDamage)
       battle.playerHp = player.hp
@@ -3144,12 +3216,6 @@ export function useGame(currentPageType = 'cultivation') {
     }
 
     battle.round += 1
-    if (battle.round > 12) {
-      const enemyPower = getBattlePowerFromStats(enemy)
-      const compare = battlePower.value * (0.9 + Math.random() * 0.25) - enemyPower
-      finishManualBattle(compare >= 0, compare >= 0 ? '双方鏖战良久，你凭更深根基压过对手。' : '久战不下，你不愿恋战，抽身退走。')
-      return
-    }
     battle.waitingForPlayer = true
     battle.lastResult = '战斗进行中，请继续选择技能。'
   }
@@ -3175,8 +3241,10 @@ export function useGame(currentPageType = 'cultivation') {
 
     if (success) {
       battle.currentProcess.push('你成功遁走，脱离了战斗。')
-      player.hp = battleMaxHp.value
-      player.spirit = player.maxSpirit
+      if (source !== 'exploration') {
+        player.hp = battleMaxHp.value
+        player.spirit = player.maxSpirit
+      }
       battle.visible = false
       battle.isBattling = false
       battle.waitingForPlayer = false
@@ -3210,12 +3278,6 @@ export function useGame(currentPageType = 'cultivation') {
       return
     }
     battle.round += 1
-    if (battle.round > 12) {
-      const enemyPower = getBattlePowerFromStats(enemy)
-      const compare = battlePower.value * (0.9 + Math.random() * 0.25) - enemyPower
-      finishManualBattle(compare >= 0, compare >= 0 ? '双方鏖战良久，你凭更深根基压过对手。' : '久战不下，你不愿恋战，抽身退走。')
-      return
-    }
     battle.waitingForPlayer = true
     battle.lastResult = '战斗进行中，请继续选择技能。'
   }
@@ -3246,6 +3308,7 @@ export function useGame(currentPageType = 'cultivation') {
     let simDefBuffTurns = 0
     let simDodgeBuff = 0
     let simDodgeBuffTurns = 0
+    let simActiveDodge = false
     let simEnemyAtkDown = 0
     let win = false
 
@@ -3265,7 +3328,8 @@ export function useGame(currentPageType = 'cultivation') {
     }
 
     function simPlayerDamage(skill, enemy) {
-      const enemyDodgeChance = 0.025 + (enemy.realmIndex || 0) * 0.01
+      const enemyPowerRatio = getBattlePowerFromStats(enemy) / Math.max(1, battlePower.value)
+      const enemyDodgeChance = Math.min(0.45, 0.15 + Math.max(0, (enemyPowerRatio - 1) * 0.40))
       if (Math.random() < enemyDodgeChance) return 0
       const fluctuation = 0.9 + Math.random() * 0.2
       const realmPressure = getRealmPressure(player.realmIndex, enemy.realmIndex)
@@ -3275,12 +3339,14 @@ export function useGame(currentPageType = 'cultivation') {
       return Math.max(6, Math.floor(rawDamage))
     }
 
-    function simEnemyDamage(enemy, shield) {
+    function simEnemyDamage(enemy, shield, round) {
       const enemyRealmPressure = getRealmPressure(enemy.realmIndex, player.realmIndex)
-      const baseDodge = actualComprehension.value * 0.004
-      const totalDodge = Math.min(1, baseDodge + simDodgeBuff)
+      const totalDodge = Math.min(0.55, battleDodgeChance.value + simDodgeBuff)
       if (totalDodge > 0 && Math.random() < totalDodge) return 0
-      return Math.max(5, Math.floor(enemy.attack * (1 - simEnemyAtkDown) * (0.88 + Math.random() * 0.24) * enemyRealmPressure - battleDefense.value * (1 + simDefBuff) * 0.68 - shield))
+      const baseDamage = Math.max(5, Math.floor(enemy.attack * (1 - simEnemyAtkDown) * (0.88 + Math.random() * 0.24) * enemyRealmPressure - battleDefense.value * (1 + simDefBuff) * 0.68 - shield))
+      // 超过12回合后敌方伤害逐渐增强
+      const overRound = Math.max(0, (Number(round) || 1) - 12)
+      return Math.floor(baseDamage * (1 + overRound * 0.08))
     }
 
     function pushBattleStep(text) {
@@ -3299,12 +3365,22 @@ export function useGame(currentPageType = 'cultivation') {
     const powerRatio = battlePower.value / Math.max(1, enemyPower)
     pushBattleStep(`你遭遇${enemy.name}${enemy.realmText ? `（${enemy.realmText}）` : ''}。对方生命 ${formatNumber(enemy.maxHp)}，攻击 ${formatNumber(enemy.attack)}，防御 ${formatNumber(enemy.defense)}，战力约 ${formatNumber(enemyPower)}。你的战力约 ${formatNumber(battlePower.value)}，战力比 ${powerRatio.toFixed(2)}。战斗自动开始。`)
 
-    for (let round = 1; round <= 12; round += 1) {
+    for (let round = 1; round <= 30; round += 1) {
       const skill = pickBattleSkill(round, playerSpirit, playerHp / Math.max(1, battleMaxHp.value))
       const cost = getBattleSkillCost(skill)
       if (cost > 0) playerSpirit = Math.max(0, playerSpirit - cost)
 
-      if (skill.category === 'buff' && !skill.power) {
+      if (skill.category === 'dodge') {
+        const dodgeLevel = getBattleSkillLevel(skill)
+        const dodgeRate = Math.min(0.15, dodgeLevel * 0.015)
+        const dodgeSuccess = Math.random() < dodgeRate
+        if (dodgeSuccess) {
+          simActiveDodge = true
+          pushBattleStep(`第 ${round} 回合，你施展「${skill.name}」${cost ? `，消耗灵力 ${cost}` : ''}，身化残影——下一次攻击必定闪避！`)
+        } else {
+          pushBattleStep(`第 ${round} 回合，你施展「${skill.name}」${cost ? `，消耗灵力 ${cost}` : ''}，但未能完全融入暗影……`)
+        }
+      } else if (skill.category === 'buff' && !skill.power) {
         simApplyBuff(skill)
         const buffs = []
         if (simAtkBuff > 0) buffs.push(`攻击+${Math.floor(simAtkBuff*100)}%`)
@@ -3350,10 +3426,16 @@ export function useGame(currentPageType = 'cultivation') {
         break
       }
 
-      const enemyDamage = simEnemyDamage(enemy, simShield)
+      // 主动闪避判定
+      let activeDodgeThisRound = false
+      if (simActiveDodge) {
+        simActiveDodge = false
+        activeDodgeThisRound = true
+      }
+      const enemyDamage = activeDodgeThisRound ? 0 : simEnemyDamage(enemy, simShield, round)
       simShield = 0
       if (enemyDamage === 0) {
-        pushBattleStep(`灵巧闪避！你躲开了${enemy.name}的攻击。`)
+        pushBattleStep(activeDodgeThisRound ? `残影消散——你完美闪避了${enemy.name}的攻击！` : `灵巧闪避！你躲开了${enemy.name}的攻击。`)
       } else {
         playerHp = Math.max(0, playerHp - enemyDamage)
         pushBattleStep(`${enemy.name}反击而来，你承受 ${formatNumber(enemyDamage)} 点伤害，剩余生命 ${formatNumber(Math.max(0, playerHp))} / ${formatNumber(battleMaxHp.value)}。`)
@@ -3995,8 +4077,9 @@ export function useGame(currentPageType = 'cultivation') {
     sect.id = ''
     sect.name = ''
     sect.rank = '散修'
-    sect.sectLevel = 1
     sect.contribution = 0
+    sect.contributionLevel = 1
+    sect.totalContribution = 0
     sect.funds = 0
     sect.logs = []
     showFeedback('已离开宗门')
